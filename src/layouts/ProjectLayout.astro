@@ -1,0 +1,202 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import StatusIndicator from '@/components/StatusIndicator.astro';
+import TechBadge from '@/components/TechBadge.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import { readableDate, isoDate } from '@/utils/dates';
+import { getCollection } from 'astro:content';
+import site from '@/data/site.json';
+
+interface Props {
+  title: string;
+  summary?: string;
+  description?: string;
+  date: Date;
+  status: 'active' | 'completed' | 'archived';
+  technologies?: string[];
+  github?: string;
+  demo?: string;
+  image?: string;
+  slug: string;
+}
+
+const { 
+  title, 
+  summary, 
+  description,
+  date, 
+  status, 
+  technologies, 
+  github, 
+  demo, 
+  image,
+  slug,
+} = Astro.props;
+
+// Get other projects for "More Projects" section
+const allProjects = await getCollection('projects');
+const otherProjects = allProjects
+  .filter(p => p.slug !== slug)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 4);
+
+// Build project URL helper
+function getProjectUrl(project: typeof allProjects[0]) {
+  if (project.data.permalink) {
+    return project.data.permalink;
+  }
+  return `/projects/${project.slug}/`;
+}
+---
+
+<BaseLayout 
+  title={title} 
+  description={description || summary}
+  ogType="article"
+  ogImage={image ? `${site.url}${image}` : undefined}
+>
+  <article class="py-12">
+    {/* Project Header */}
+    <header class="mb-8">
+      <a href="/projects/" class="text-sm text-cyan-400 hover:text-cyan-300">← All Projects</a>
+
+      <h1 class="mt-4 text-3xl md:text-4xl font-semibold leading-tight">{title}</h1>
+
+      {summary && (
+        <p class="mt-2 text-xl text-neutral-400">{summary}</p>
+      )}
+
+      {/* Meta Bar */}
+      <div class="mt-6 flex flex-wrap items-center gap-4 text-sm">
+        {status && (
+          <StatusIndicator status={status} />
+        )}
+
+        <time datetime={isoDate(date)} class="text-neutral-500">
+          Updated {readableDate(date)}
+        </time>
+
+        {github && (
+          <a href={github} class="text-cyan-400 hover:text-cyan-300" target="_blank" rel="noopener">
+            View on GitHub →
+          </a>
+        )}
+
+        {demo && (
+          <a href={demo} class="text-cyan-400 hover:text-cyan-300" target="_blank" rel="noopener">
+            Live Demo →
+          </a>
+        )}
+      </div>
+
+      {/* Technologies */}
+      {technologies && technologies.length > 0 && (
+        <div class="mt-4 flex flex-wrap gap-2">
+          {technologies.map((tech) => (
+            <TechBadge tech={tech} />
+          ))}
+        </div>
+      )}
+    </header>
+
+    {/* Featured Image */}
+    {image && (
+      <figure class="mb-8">
+        <img 
+          src={image}
+          alt={title}
+          class="w-full rounded-xl border border-white/10"
+          loading="eager" 
+          decoding="async" 
+        />
+      </figure>
+    )}
+
+    {/* Project Content */}
+    <div class="prose prose-invert max-w-none">
+      <slot />
+    </div>
+
+    {/* Project Footer */}
+    <footer class="mt-12 pt-8 border-t border-white/10">
+      {/* CTA */}
+      <div class="flex flex-wrap gap-4">
+        {github && (
+          <a 
+            href={github}
+            class="px-5 py-3 rounded-xl bg-cyan-500/10 ring-1 ring-cyan-500/40 hover:bg-cyan-500/20"
+            target="_blank" 
+            rel="noopener"
+          >
+            View Source Code
+          </a>
+        )}
+
+        <a 
+          href={`mailto:${site.author.email}`}
+          class="px-5 py-3 rounded-xl bg-white/5 ring-1 ring-white/10 hover:bg-white/10"
+        >
+          Discuss This Project
+        </a>
+      </div>
+
+      {/* More Projects */}
+      {otherProjects.length > 0 && (
+        <nav class="mt-8">
+          <h3 class="text-lg font-medium mb-4">More Projects</h3>
+          <div class="grid gap-4 sm:grid-cols-2">
+            {otherProjects.map((project) => (
+              <a 
+                href={getProjectUrl(project)}
+                class="group p-4 rounded-lg border border-white/10 hover:bg-white/5"
+              >
+                <p class="font-medium group-hover:text-cyan-300">{project.data.title}</p>
+                <p class="text-sm text-neutral-500 mt-1">{project.data.summary}</p>
+              </a>
+            ))}
+          </div>
+        </nav>
+      )}
+    </footer>
+  </article>
+
+  {/* TechArticle Schema */}
+  <script 
+    type="application/ld+json" 
+    slot="head"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": title,
+      "description": description || summary,
+      "author": {
+        "@type": "Person",
+        "name": site.author.name,
+        "url": site.url,
+        "jobTitle": "Cyber Threat Intelligence & Data Analytics",
+        "sameAs": [
+          site.author.linkedin,
+          site.author.github
+        ]
+      },
+      "datePublished": isoDate(date),
+      "dateModified": isoDate(date),
+      ...(image && { "image": `${site.url}${image}` }),
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `${site.url}/projects/${slug}/`
+      },
+      ...(technologies && { 
+        "keywords": technologies.join(', '),
+        "dependencies": technologies.join(', ')
+      }),
+      ...(github && { "codeRepository": github }),
+      "proficiencyLevel": "Expert",
+      "publisher": {
+        "@type": "Person",
+        "name": site.author.name,
+        "url": site.url
+      }
+    })}
+  />
+</BaseLayout>

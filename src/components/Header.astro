@@ -1,0 +1,71 @@
+---
+import site from '@/data/site.json';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<header class:list={["relative overflow-hidden", className]}>
+  <div class="absolute inset-0 grid-bg"></div>
+  <div class="relative mx-auto max-w-6xl px-6 py-14">
+    <nav class="flex items-center justify-between">
+      <a aria-label="Home" href="/" class="font-semibold tracking-wide">
+        brianchaplow<span class="text-cyan-400">.com</span>
+      </a>
+      
+      {/* Desktop nav */}
+      <div class="hidden md:flex space-x-6 text-sm">
+        {site.navigation.map((item) => (
+          <a 
+            href={item.url} 
+            class="hover:text-cyan-300"
+            {...(item.external ? { rel: "me noopener", target: "_blank" } : {})}
+          >
+            {item.title}
+          </a>
+        ))}
+      </div>
+      
+      {/* Mobile menu button */}
+      <button 
+        id="navToggle" 
+        class="md:hidden rounded-lg px-3 py-2 ring-1 ring-white/10"
+        aria-expanded="false" 
+        aria-controls="mobileMenu" 
+        aria-label="Menu"
+      >
+        <span class="sr-only">Toggle navigation</span>☰
+      </button>
+    </nav>
+    
+    {/* Mobile nav dropdown */}
+    <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4 border-t border-white/10 pt-4">
+      <div class="flex flex-col space-y-3 text-sm">
+        {site.navigation.map((item) => (
+          <a 
+            href={item.url} 
+            class="hover:text-cyan-300"
+            {...(item.external ? { rel: "me noopener", target: "_blank" } : {})}
+          >
+            {item.title}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <slot name="hero" />
+  </div>
+</header>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  
+  navToggle?.addEventListener('click', () => {
+    const isHidden = mobileMenu?.classList.toggle('hidden');
+    navToggle.setAttribute('aria-expanded', String(!isHidden));
+  });
+</script>

@@ -1,0 +1,20 @@
+---
+interface Props {
+  tech: string;
+  size?: 'sm' | 'md';
+}
+
+const { tech, size = 'md' } = Astro.props;
+
+const sizeClasses = {
+  sm: 'text-xs px-2 py-1',
+  md: 'px-3 py-1 text-sm',
+};
+---
+
+<span class:list={[
+  "rounded-full bg-cyan-500/10 text-cyan-300 ring-1 ring-cyan-500/30",
+  sizeClasses[size]
+]}>
+  {tech}
+</span>

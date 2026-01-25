@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectLayout from '@/layouts/ProjectLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  
+  return projects.map((project) => {
+    // Handle custom permalinks vs default slug-based URLs
+    // If permalink is set (like /projects/homelab-soc-v1/), extract the slug part
+    let slug = project.slug;
+    
+    if (project.data.permalink) {
+      // Extract slug from permalink like "/projects/homelab-soc-v1/" -> "homelab-soc-v1"
+      const match = project.data.permalink.match(/\/projects\/([^/]+)\/?$/);
+      if (match) {
+        slug = match[1];
+      }
+    }
+    
+    return {
+      params: { slug },
+      props: { project },
+    };
+  });
+}
+
+interface Props {
+  project: Awaited<ReturnType<typeof getCollection>>[0];
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+---
+
+<ProjectLayout
+  title={project.data.title}
+  summary={project.data.summary}
+  description={project.data.description}
+  date={project.data.date}
+  status={project.data.status}
+  technologies={project.data.technologies}
+  github={project.data.github}
+  demo={project.data.demo}
+  image={project.data.image}
+  slug={project.slug}
+>
+  <Content />
+</ProjectLayout>

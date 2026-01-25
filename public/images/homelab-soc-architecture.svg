@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#020617"/>
+    </linearGradient>
+    <linearGradient id="cloudflareGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f97316"/>
+      <stop offset="100%" style="stop-color:#ea580c"/>
+    </linearGradient>
+    <linearGradient id="gcpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#2563eb"/>
+    </linearGradient>
+    <linearGradient id="homeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22d3ee"/>
+      <stop offset="100%" style="stop-color:#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="tailscaleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="900" fill="url(#bgGrad)"/>
+  
+  <!-- INTERNET -->
+  <g filter="url(#shadow)">
+    <rect x="300" y="20" width="200" height="50" rx="8" fill="#334155" stroke="#475569" stroke-width="2"/>
+    <text x="400" y="52" text-anchor="middle" fill="#f1f5f9" font-size="16" font-weight="600">INTERNET</text>
+  </g>
+  
+  <!-- Arrow: Internet to Cloudflare -->
+  <path d="M400 70 L400 95" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker></defs>
+  
+  <!-- CLOUDFLARE LAYER -->
+  <g filter="url(#shadow)">
+    <rect x="200" y="100" width="400" height="130" rx="12" fill="#1e293b" stroke="url(#cloudflareGrad)" stroke-width="2"/>
+    <rect x="200" y="100" width="400" height="32" rx="12" fill="url(#cloudflareGrad)"/>
+    <rect x="200" y="120" width="400" height="12" fill="url(#cloudflareGrad)"/>
+    <text x="400" y="122" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">CLOUDFLARE</text>
+    <text x="220" y="155" fill="#94a3b8" font-size="12">• WAF &amp; Bot Fight Mode</text>
+    <text x="220" y="175" fill="#94a3b8" font-size="12">• JA3 TLS Fingerprinting</text>
+    <text x="420" y="155" fill="#94a3b8" font-size="12">• Geo Headers Injection</text>
+    <text x="420" y="175" fill="#94a3b8" font-size="12">• Auto-Block API Integration</text>
+    <text x="400" y="215" text-anchor="middle" fill="#f97316" font-size="11" font-style="italic">Edge security for brianchaplow.com &amp; bytesbourbonbbq.com</text>
+  </g>
+  
+  <!-- Arrow: Cloudflare to GCP -->
+  <path d="M400 230 L400 265" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- GCP LAYER -->
+  <g filter="url(#shadow)">
+    <rect x="200" y="270" width="400" height="130" rx="12" fill="#1e293b" stroke="url(#gcpGrad)" stroke-width="2"/>
+    <rect x="200" y="270" width="400" height="32" rx="12" fill="url(#gcpGrad)"/>
+    <rect x="200" y="290" width="400" height="12" fill="url(#gcpGrad)"/>
+    <text x="400" y="292" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">GOOGLE CLOUD VM</text>
+    <text x="220" y="325" fill="#94a3b8" font-size="12">• Apache + Let's Encrypt SSL</text>
+    <text x="220" y="345" fill="#94a3b8" font-size="12">• Umami Analytics</text>
+    <text x="420" y="325" fill="#94a3b8" font-size="12">• Cusdis Comments</text>
+    <text x="420" y="345" fill="#94a3b8" font-size="12">• Fluent Bit (log shipper)</text>
+    <text x="400" y="385" text-anchor="middle" fill="#3b82f6" font-size="11" font-style="italic">e2-small • us-east4-a • Tailscale IP: 100.125.40.97</text>
+  </g>
+  
+  <!-- TAILSCALE VPN MESH -->
+  <g filter="url(#shadow)">
+    <rect x="280" y="420" width="240" height="60" rx="25" fill="#1e293b" stroke="url(#tailscaleGrad)" stroke-width="2" stroke-dasharray="8,4"/>
+    <text x="400" y="448" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="600">Tailscale VPN Mesh</text>
+    <text x="400" y="466" text-anchor="middle" fill="#7c3aed" font-size="11">Encrypted WireGuard Tunnel</text>
+  </g>
+  
+  <!-- Arrow: GCP to Tailscale -->
+  <path d="M400 400 L400 420" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="4,2"/>
+  
+  <!-- Arrow: Tailscale to Home -->
+  <path d="M400 480 L400 510" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="4,2"/>
+  
+  <!-- Mobile branch -->
+  <g filter="url(#shadow)">
+    <rect x="620" y="430" width="120" height="50" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="680" y="452" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="500">📱 iPhone</text>
+    <text x="680" y="468" text-anchor="middle" fill="#94a3b8" font-size="10">Mobile Monitoring</text>
+  </g>
+  <path d="M520 450 L620 450" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="4,2"/>
+  
+  <!-- HOME NETWORK LAYER -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="515" width="700" height="370" rx="12" fill="#1e293b" stroke="url(#homeGrad)" stroke-width="2"/>
+    <rect x="50" y="515" width="700" height="32" rx="12" fill="url(#homeGrad)"/>
+    <rect x="50" y="535" width="700" height="12" fill="url(#homeGrad)"/>
+    <text x="400" y="537" text-anchor="middle" fill="#0f172a" font-size="14" font-weight="700">HOME NETWORK</text>
+  </g>
+  
+  <!-- Router -->
+  <g>
+    <rect x="80" y="570" width="150" height="70" rx="8" fill="#334155" stroke="#475569" stroke-width="1.5"/>
+    <text x="155" y="595" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="600">ASUS Router</text>
+    <text x="155" y="612" text-anchor="middle" fill="#94a3b8" font-size="10">ZenWiFi BQ16 Pro</text>
+    <text x="155" y="628" text-anchor="middle" fill="#64748b" font-size="10">192.168.50.1</text>
+  </g>
+  
+  <!-- Arrow: Router to Switch -->
+  <path d="M230 605 L280 605" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- TP-Link Switch -->
+  <g>
+    <rect x="285" y="570" width="150" height="70" rx="8" fill="#334155" stroke="#22d3ee" stroke-width="1.5"/>
+    <text x="360" y="595" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="600">TP-Link Switch</text>
+    <text x="360" y="612" text-anchor="middle" fill="#22d3ee" font-size="10">Port Mirror (SPAN)</text>
+    <text x="360" y="628" text-anchor="middle" fill="#64748b" font-size="10">192.168.50.250</text>
+  </g>
+  
+  <!-- Arrow: Switch to QNAP -->
+  <path d="M435 605 L490 605" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="462" y="598" text-anchor="middle" fill="#22d3ee" font-size="9">SPAN</text>
+  
+  <!-- QNAP NAS -->
+  <g>
+    <rect x="495" y="560" width="230" height="160" rx="8" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+    <rect x="495" y="560" width="230" height="28" rx="8" fill="#22d3ee"/>
+    <rect x="495" y="580" width="230" height="8" fill="#22d3ee"/>
+    <text x="610" y="580" text-anchor="middle" fill="#0f172a" font-size="12" font-weight="700">QNAP NAS (SOC Platform)</text>
+    <text x="610" y="605" text-anchor="middle" fill="#64748b" font-size="10">Tailscale: 100.110.112.98 • LAN: 192.168.50.10</text>
+    
+    <!-- Container boxes -->
+    <rect x="505" y="620" width="100" height="24" rx="4" fill="#334155"/>
+    <text x="555" y="636" text-anchor="middle" fill="#22d3ee" font-size="10">OpenSearch</text>
+    
+    <rect x="615" y="620" width="100" height="24" rx="4" fill="#334155"/>
+    <text x="665" y="636" text-anchor="middle" fill="#f97316" font-size="10">Suricata IDS</text>
+    
+    <rect x="505" y="650" width="100" height="24" rx="4" fill="#334155"/>
+    <text x="555" y="666" text-anchor="middle" fill="#a78bfa" font-size="10">soc-automation</text>
+    
+    <rect x="615" y="650" width="100" height="24" rx="4" fill="#334155"/>
+    <text x="665" y="666" text-anchor="middle" fill="#94a3b8" font-size="10">Fluent Bit</text>
+    
+    <rect x="505" y="680" width="100" height="24" rx="4" fill="#334155"/>
+    <text x="555" y="696" text-anchor="middle" fill="#94a3b8" font-size="10">Zeek</text>
+    
+    <rect x="615" y="680" width="100" height="24" rx="4" fill="#334155"/>
+    <text x="665" y="696" text-anchor="middle" fill="#94a3b8" font-size="10">CyberChef</text>
+  </g>
+  
+  <!-- Endpoints -->
+  <g>
+    <rect x="100" y="680" width="130" height="60" rx="8" fill="#334155" stroke="#475569" stroke-width="1.5"/>
+    <text x="165" y="705" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="500">Windows Endpoint</text>
+    <text x="165" y="722" text-anchor="middle" fill="#94a3b8" font-size="10">Sysmon → Fluent Bit</text>
+  </g>
+  
+  <g>
+    <rect x="260" y="680" width="130" height="60" rx="8" fill="#334155" stroke="#475569" stroke-width="1.5"/>
+    <text x="325" y="705" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="500">Kali Machine</text>
+    <text x="325" y="722" text-anchor="middle" fill="#94a3b8" font-size="10">Attack Simulation</text>
+  </g>
+  
+  <!-- Arrows from switch to endpoints -->
+  <path d="M310 640 L310 660 L165 660 L165 680" stroke="#64748b" stroke-width="1.5" fill="none"/>
+  <path d="M410 640 L410 660 L325 660 L325 680" stroke="#64748b" stroke-width="1.5" fill="none"/>
+  
+  <!-- IoT Devices -->
+  <g>
+    <rect x="100" y="760" width="130" height="50" rx="8" fill="#334155" stroke="#475569" stroke-width="1"/>
+    <text x="165" y="785" text-anchor="middle" fill="#94a3b8" font-size="10">Hue Bridge • Eufy Hub</text>
+    <text x="165" y="800" text-anchor="middle" fill="#64748b" font-size="9">IoT Monitoring</text>
+  </g>
+  
+  <!-- Data flow labels -->
+  <g>
+    <rect x="80" y="830" width="640" height="40" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="100" y="852" fill="#f97316" font-size="11">▶ Threat Intel:</text>
+    <text x="190" y="852" fill="#94a3b8" font-size="10">AbuseIPDB enrichment → Auto-block to Cloudflare (score ≥90)</text>
+    <text x="100" y="866" fill="#22d3ee" font-size="11">▶ Detection:</text>
+    <text x="180" y="866" fill="#94a3b8" font-size="10">47,290 Suricata rules • GeoIP enrichment • Discord alerts • Watch reports</text>
+  </g>
+  
+</svg>

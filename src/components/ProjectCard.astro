@@ -1,0 +1,48 @@
+---
+import StatusIndicator from './StatusIndicator.astro';
+import TechBadge from './TechBadge.astro';
+import { readableDate, isoDate } from '@/utils/dates';
+
+interface Props {
+  title: string;
+  summary?: string;
+  date: Date;
+  status: 'active' | 'completed' | 'archived';
+  technologies?: string[];
+  url: string;
+}
+
+const { title, summary, date, status, technologies, url } = Astro.props;
+---
+
+<a 
+  class="group block rounded-xl border border-white/10 p-6 hover:bg-white/5 transition-colors" 
+  href={url}
+>
+  {/* Status indicator */}
+  <div class="flex items-center justify-between mb-3">
+    <span class="flex items-center gap-2 text-xs">
+      <StatusIndicator status={status} />
+    </span>
+    
+    <time datetime={isoDate(date)} class="text-xs text-neutral-500">
+      {readableDate(date)}
+    </time>
+  </div>
+  
+  <h2 class="text-xl font-medium group-hover:text-cyan-300 transition-colors">
+    {title}
+  </h2>
+  
+  {summary && (
+    <p class="mt-2 text-neutral-400">{summary}</p>
+  )}
+  
+  {technologies && technologies.length > 0 && (
+    <div class="mt-4 flex flex-wrap gap-2">
+      {technologies.map((tech) => (
+        <TechBadge tech={tech} size="sm" />
+      ))}
+    </div>
+  )}
+</a>

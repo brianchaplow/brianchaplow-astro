@@ -1,0 +1,426 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+const { src, alt, caption } = Astro.props;
+---
+
+<div class="dashboard-showcase not-prose">
+  {/* Ambient glow behind */}
+  <div class="showcase-glow">
+    <div class="glow-pulse"></div>
+  </div>
+  
+  {/* Monitor frame */}
+  <div class="monitor-frame">
+    {/* Screen bezel */}
+    <div class="monitor-bezel">
+      {/* Status bar */}
+      <div class="monitor-status">
+        <div class="status-left">
+          <span class="status-dot red"></span>
+          <span class="status-dot yellow"></span>
+          <span class="status-dot green"></span>
+        </div>
+        <div class="status-center">
+          <span class="status-icon">🔒</span>
+          <span class="status-url">opensearch.soc.local:5601</span>
+        </div>
+        <div class="status-right">
+          <span class="status-live">
+            <span class="live-dot"></span>
+            LIVE
+          </span>
+        </div>
+      </div>
+      
+      {/* Screen content */}
+      <div class="monitor-screen">
+        {/* Scan line effect */}
+        <div class="scan-line"></div>
+        
+        {/* Reflection */}
+        <div class="screen-reflection"></div>
+        
+        {/* The actual image */}
+        <img 
+          src={src} 
+          alt={alt}
+          class="dashboard-image"
+          loading="eager"
+        />
+        
+        {/* Corner accents */}
+        <div class="corner-accent top-left"></div>
+        <div class="corner-accent top-right"></div>
+        <div class="corner-accent bottom-left"></div>
+        <div class="corner-accent bottom-right"></div>
+      </div>
+    </div>
+    
+    {/* Monitor stand */}
+    <div class="monitor-stand">
+      <div class="stand-neck"></div>
+      <div class="stand-base"></div>
+    </div>
+  </div>
+  
+  {/* Caption */}
+  {caption && (
+    <p class="showcase-caption">{caption}</p>
+  )}
+  
+  {/* Floating data particles */}
+  <div class="data-particles">
+    <div class="particle p1">01</div>
+    <div class="particle p2">10</div>
+    <div class="particle p3">11</div>
+    <div class="particle p4">00</div>
+    <div class="particle p5">01</div>
+  </div>
+</div>
+
+<style>
+  .dashboard-showcase {
+    position: relative;
+    padding: 3rem 0;
+    margin: 2rem 0 3rem;
+  }
+  
+  /* Ambient glow */
+  .showcase-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .glow-pulse {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.15) 0%, transparent 60%);
+    animation: glow-breathe 4s ease-in-out infinite;
+  }
+  
+  @keyframes glow-breathe {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+  }
+  
+  /* Monitor frame */
+  .monitor-frame {
+    position: relative;
+    z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .monitor-bezel {
+    background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+    border-radius: 1rem;
+    padding: 0.5rem;
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 25px 50px -12px rgba(0, 0, 0, 0.6),
+      0 0 100px -20px rgba(0, 212, 255, 0.3);
+  }
+  
+  /* Status bar */
+  .monitor-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+  
+  .status-left {
+    display: flex;
+    gap: 0.4rem;
+  }
+  
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  
+  .status-dot.red { background: #ff5f56; }
+  .status-dot.yellow { background: #ffbd2e; }
+  .status-dot.green { background: #27c93f; }
+  
+  .status-center {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .status-icon {
+    font-size: 0.8rem;
+  }
+  
+  .status-url {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.25rem;
+  }
+  
+  .status-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .status-live {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #10b981;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .status-live .live-dot {
+    width: 6px;
+    height: 6px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  }
+  
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  
+  /* Screen */
+  .monitor-screen {
+    position: relative;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    background: #000;
+  }
+  
+  .dashboard-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    animation: screen-on 1s ease-out 0.3s forwards;
+  }
+  
+  @keyframes screen-on {
+    0% { 
+      opacity: 0;
+      filter: brightness(2) contrast(0.5);
+    }
+    50% {
+      opacity: 1;
+      filter: brightness(1.5) contrast(0.8);
+    }
+    100% { 
+      opacity: 1;
+      filter: brightness(1) contrast(1);
+    }
+  }
+  
+  /* Scan line effect */
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
+    opacity: 0;
+    animation: scan 4s linear infinite;
+    animation-delay: 1.5s;
+    pointer-events: none;
+    z-index: 10;
+  }
+  
+  @keyframes scan {
+    0% { top: 0; opacity: 0; }
+    5% { opacity: 0.6; }
+    95% { opacity: 0.6; }
+    100% { top: 100%; opacity: 0; }
+  }
+  
+  /* Screen reflection */
+  .screen-reflection {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    pointer-events: none;
+    z-index: 5;
+  }
+  
+  /* Corner accents */
+  .corner-accent {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0, 212, 255, 0.4);
+    z-index: 6;
+    opacity: 0;
+    animation: corner-fade-in 0.5s ease-out forwards;
+  }
+  
+  .corner-accent.top-left {
+    top: 10px;
+    left: 10px;
+    border-right: none;
+    border-bottom: none;
+    animation-delay: 1s;
+  }
+  
+  .corner-accent.top-right {
+    top: 10px;
+    right: 10px;
+    border-left: none;
+    border-bottom: none;
+    animation-delay: 1.1s;
+  }
+  
+  .corner-accent.bottom-left {
+    bottom: 10px;
+    left: 10px;
+    border-right: none;
+    border-top: none;
+    animation-delay: 1.2s;
+  }
+  
+  .corner-accent.bottom-right {
+    bottom: 10px;
+    right: 10px;
+    border-left: none;
+    border-top: none;
+    animation-delay: 1.3s;
+  }
+  
+  @keyframes corner-fade-in {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  /* Monitor stand */
+  .monitor-stand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -2px;
+  }
+  
+  .stand-neck {
+    width: 60px;
+    height: 30px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #12121a 100%);
+    border-radius: 0 0 4px 4px;
+  }
+  
+  .stand-base {
+    width: 120px;
+    height: 8px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #0a0a10 100%);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Caption */
+  .showcase-caption {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .showcase-caption::first-line {
+    color: #00d4ff;
+    font-weight: 600;
+  }
+  
+  /* Floating data particles */
+  .data-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  
+  .particle {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(0, 212, 255, 0.2);
+    animation: float-up 15s linear infinite;
+  }
+  
+  .p1 { left: 5%; animation-delay: 0s; }
+  .p2 { left: 20%; animation-delay: -3s; }
+  .p3 { left: 80%; animation-delay: -6s; }
+  .p4 { left: 90%; animation-delay: -9s; }
+  .p5 { left: 50%; animation-delay: -12s; }
+  
+  @keyframes float-up {
+    0% { 
+      transform: translateY(100vh) rotate(0deg);
+      opacity: 0;
+    }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% { 
+      transform: translateY(-100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .dashboard-showcase {
+      padding: 1.5rem 0;
+    }
+    
+    .monitor-bezel {
+      border-radius: 0.5rem;
+      padding: 0.3rem;
+    }
+    
+    .monitor-status {
+      padding: 0.3rem 0.5rem;
+    }
+    
+    .status-center {
+      display: none;
+    }
+    
+    .monitor-stand {
+      display: none;
+    }
+    
+    .corner-accent {
+      width: 12px;
+      height: 12px;
+    }
+  }
+</style>

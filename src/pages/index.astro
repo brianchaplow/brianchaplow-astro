@@ -1,0 +1,116 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import site from '@/data/site.json';
+---
+
+<BaseLayout 
+  title="Cyber Threat Intelligence & Data Analytics"
+  description="U.S. Navy veteran and data-driven cybersecurity professional specializing in threat intel, SOC operations, and data analytics."
+>
+  {/* Hero Section */}
+  <section class="relative -mt-14 pt-14 pb-16 overflow-hidden">
+    <div class="relative flex flex-col md:flex-row gap-8 md:items-center">
+      
+      {/* Headshot */}
+      <div class="shrink-0">
+        <img 
+          src="/images/brian-chaplow.jpg" 
+          alt="Brian S. Chaplow" 
+          class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover ring-2 ring-cyan-500/30" 
+        />
+      </div>
+      
+      {/* Info */}
+      <div>
+        <h1 class="text-3xl md:text-5xl font-semibold leading-tight">
+          Brian S. Chaplow
+        </h1>
+        <p class="mt-2 text-xl text-cyan-400">{site.tagline}</p>
+        <p class="mt-3 text-neutral-300 max-w-lg">
+          26-year Navy veteran and former EOC Chief. I bring operational discipline to security — monitoring, triage, escalation, and playbooks that hold up under pressure.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a 
+            href={site.author.linkedin} 
+            class="px-5 py-3 rounded-xl bg-cyan-500/10 ring-1 ring-cyan-500/40 hover:bg-cyan-500/20" 
+            target="_blank" 
+            rel="noopener"
+          >
+            Connect on LinkedIn
+          </a>
+          <a href="/about/" class="px-5 py-3 rounded-xl bg-white/5 ring-1 ring-white/10 hover:bg-white/10">
+            About Me
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* What I Bring */}
+  <section class="py-12 border-t border-white/10">
+    <h2 class="text-2xl font-semibold">What I Bring</h2>
+    
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      <div class="p-5 rounded-xl border border-white/10 bg-white/5">
+        <div class="text-2xl mb-3">🎯</div>
+        <h3 class="font-medium">SOC Operations</h3>
+        <p class="mt-2 text-sm text-neutral-400">Alert triage, incident response, SIEM monitoring. Years of watch floor experience translated to security operations.</p>
+      </div>
+      
+      <div class="p-5 rounded-xl border border-white/10 bg-white/5">
+        <div class="text-2xl mb-3">📋</div>
+        <h3 class="font-medium">Playbook Development</h3>
+        <p class="mt-2 text-sm text-neutral-400">Escalation procedures, runbooks, handoff documentation. Built for 0300 execution when thinking is hard.</p>
+      </div>
+      
+      <div class="p-5 rounded-xl border border-white/10 bg-white/5">
+        <div class="text-2xl mb-3">📊</div>
+        <h3 class="font-medium">Data-Driven Security</h3>
+        <p class="mt-2 text-sm text-neutral-400">M.S. in Data Science. Detection engineering, log analysis, metrics that matter.</p>
+      </div>
+    </div>
+  </section>
+
+  {/* Featured Project */}
+  <section class="py-12 border-t border-white/10">
+    <h2 class="text-2xl font-semibold">Featured Project</h2>
+    
+    <a href="/projects/homelab-soc/" class="mt-6 block rounded-xl border border-white/10 p-6 hover:bg-white/5 transition-colors">
+      <div class="md:flex md:gap-8 md:items-center">
+        <div class="flex-1">
+          <h3 class="text-xl font-medium text-cyan-300">Homelab SOC</h3>
+          <p class="mt-2 text-neutral-300">
+            Production-grade security monitoring on home infrastructure. Real detection, real logs, real threat hunting — not a lab exercise.
+          </p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="text-xs px-2 py-1 rounded bg-cyan-500/10 text-cyan-300">OpenSearch</span>
+            <span class="text-xs px-2 py-1 rounded bg-cyan-500/10 text-cyan-300">Suricata</span>
+            <span class="text-xs px-2 py-1 rounded bg-cyan-500/10 text-cyan-300">Fluent Bit</span>
+            <span class="text-xs px-2 py-1 rounded bg-cyan-500/10 text-cyan-300">Docker</span>
+          </div>
+        </div>
+        <div class="mt-4 md:mt-0 text-cyan-400 text-sm">
+          View project →
+        </div>
+      </div>
+    </a>
+  </section>
+
+  {/* Credentials Bar */}
+  <section class="py-8 border-t border-white/10">
+    <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-neutral-400">
+      <span>🎖️ 26 Years U.S. Navy</span>
+      <span>🛡️ CompTIA Security+</span>
+      <span>📈 M.S. Data Science</span>
+      <span>⚙️ EOC Chief</span>
+    </div>
+  </section>
+
+  {/* CTA */}
+  <section class="py-12 border-t border-white/10 text-center">
+    <p class="text-lg text-neutral-300">Looking for SOC, CTI, or detection engineering roles.</p>
+    <a href="/contact/" class="mt-4 inline-block px-6 py-3 rounded-xl bg-cyan-500/10 ring-1 ring-cyan-500/40 hover:bg-cyan-500/20">
+      Get in Touch
+    </a>
+  </section>
+</BaseLayout>

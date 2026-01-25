@@ -1,0 +1,8 @@
+---
+import site from '@/data/site.json';
+import { currentYear } from '@/utils/dates';
+---
+
+<footer class="py-10 border-t border-white/10 text-center text-sm text-neutral-400">
+  <p>© {currentYear()} {site.author.name}</p>
+</footer>

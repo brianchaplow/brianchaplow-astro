@@ -1,0 +1,350 @@
+---
+interface Stat {
+  value: number;
+  suffix?: string;
+  label: string;
+  color?: string;
+}
+
+interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+<div class="stats-hero not-prose relative mb-16">
+  {/* Animated background */}
+  <div class="hero-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="grid-overlay"></div>
+    <div class="noise-overlay"></div>
+  </div>
+  
+  {/* Live indicator */}
+  <div class="live-indicator">
+    <span class="live-dot"></span>
+    <span class="live-text">Live Monitoring</span>
+  </div>
+  
+  {/* Stats grid */}
+  <div class="stats-grid">
+    {stats.map((stat, i) => (
+      <div 
+        class="stat-card"
+        style={`--delay: ${i * 150}ms; --index: ${i}`}
+      >
+        <div class="stat-glow"></div>
+        <div class="stat-content">
+          <div 
+            class="stat-value"
+            data-target={stat.value}
+            data-suffix={stat.suffix || ''}
+          >
+            0{stat.suffix || ''}
+          </div>
+          <div class="stat-label">{stat.label}</div>
+        </div>
+        <div class="stat-bar">
+          <div class="stat-bar-fill" style={`--fill-delay: ${i * 150 + 500}ms`}></div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .stats-hero {
+    position: relative;
+    padding: 3rem 2rem;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,20,30,0.8) 100%);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+  }
+  
+  /* Animated background orbs */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  
+  .gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: float 20s ease-in-out infinite;
+  }
+  
+  .orb-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.4) 0%, transparent 70%);
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s;
+  }
+  
+  .orb-2 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
+    bottom: -50px;
+    right: -50px;
+    animation-delay: -7s;
+    animation-duration: 25s;
+  }
+  
+  .orb-3 {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -14s;
+    animation-duration: 30s;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -30px) scale(1.1); }
+    50% { transform: translate(-20px, 20px) scale(0.95); }
+    75% { transform: translate(20px, 30px) scale(1.05); }
+  }
+  
+  .orb-3 {
+    animation-name: float-center;
+  }
+  
+  @keyframes float-center {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    25% { transform: translate(-40%, -60%) scale(1.1); }
+    50% { transform: translate(-60%, -40%) scale(0.95); }
+    75% { transform: translate(-45%, -55%) scale(1.05); }
+  }
+  
+  /* Grid overlay */
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+  }
+  
+  /* Noise texture */
+  .noise-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+  
+  /* Live indicator */
+  .live-indicator {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(16, 185, 129, 0.9);
+    z-index: 10;
+  }
+  
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse-live 2s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+  }
+  
+  @keyframes pulse-live {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  
+  /* Stats grid */
+  .stats-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    z-index: 5;
+  }
+  
+  @media (min-width: 768px) {
+    .stats-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  /* Stat cards */
+  .stat-card {
+    position: relative;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: card-enter 0.6s ease-out forwards;
+    animation-delay: var(--delay);
+    overflow: hidden;
+  }
+  
+  @keyframes card-enter {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .stat-card:hover {
+    border-color: rgba(0, 212, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .stat-card:hover .stat-glow {
+    opacity: 1;
+  }
+  
+  .stat-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.15) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .stat-content {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #00ff88 0%, #00d4ff 50%, #a855f7 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 5s ease infinite;
+    line-height: 1.2;
+  }
+  
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  .stat-label {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  /* Animated bar under each stat */
+  .stat-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .stat-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00ff88, #00d4ff);
+    animation: bar-fill 1.5s ease-out forwards;
+    animation-delay: var(--fill-delay);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  }
+  
+  @keyframes bar-fill {
+    to { width: 100%; }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .stats-hero {
+      padding: 2rem 1rem;
+    }
+    
+    .stat-value {
+      font-size: 1.75rem;
+    }
+    
+    .stat-card {
+      padding: 1rem;
+    }
+  }
+</style>
+
+<script>
+  const observerOptions = {
+    threshold: 0.3,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const animateValue = (el: HTMLElement, target: number, suffix: string) => {
+    const duration = 2000;
+    const startTime = performance.now();
+    
+    const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
+    
+    const update = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutQuart(progress);
+      const currentValue = Math.floor(target * easedProgress);
+      
+      el.textContent = currentValue.toLocaleString() + suffix;
+      
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    };
+    
+    requestAnimationFrame(update);
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target as HTMLElement;
+        const target = parseInt(el.dataset.target || '0');
+        const suffix = el.dataset.suffix || '';
+        
+        animateValue(el, target, suffix);
+        observer.unobserve(el);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.stat-value').forEach(el => {
+    observer.observe(el);
+  });
+</script>
+

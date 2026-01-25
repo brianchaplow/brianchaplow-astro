@@ -1,0 +1,72 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import site from '@/data/site.json';
+---
+
+<BaseLayout 
+  title="Contact"
+  description="Get in touch for SOC, CTI, or security engineering opportunities."
+>
+  <section class="py-12">
+    <header class="mb-10">
+      <h1 class="text-3xl md:text-4xl font-semibold">Get in Touch</h1>
+      <p class="mt-4 text-lg text-neutral-400 max-w-xl">
+        Open to SOC analyst, CTI, and detection engineering roles. Also happy to talk shop about homelab builds, threat detection, or playbook development.
+      </p>
+    </header>
+
+    <div class="grid gap-6 md:grid-cols-2 max-w-2xl mx-auto">
+
+      {/* Email */}
+      <a 
+        href={`mailto:${site.author.email}`}
+        class="group p-6 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+      >
+        <div class="text-3xl mb-4">📧</div>
+        <h2 class="text-lg font-semibold group-hover:text-cyan-300">Email</h2>
+        <p class="mt-2 text-neutral-400 text-sm">{site.author.email}</p>
+        <p class="mt-1 text-neutral-500 text-xs">Best for opportunities and detailed questions</p>
+      </a>
+
+      {/* LinkedIn */}
+      <a 
+        href={site.author.linkedin}
+        target="_blank" 
+        rel="noopener"
+        class="group p-6 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+      >
+        <div class="text-3xl mb-4">💼</div>
+        <h2 class="text-lg font-semibold group-hover:text-cyan-300">LinkedIn</h2>
+        <p class="mt-2 text-neutral-400 text-sm">linkedin.com/in/brianchaplow</p>
+        <p class="mt-1 text-neutral-500 text-xs">Connect and see full work history</p>
+      </a>
+
+      {/* GitHub */}
+      <a 
+        href={site.author.github}
+        target="_blank" 
+        rel="noopener"
+        class="group p-6 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+      >
+        <div class="text-3xl mb-4">💻</div>
+        <h2 class="text-lg font-semibold group-hover:text-cyan-300">GitHub</h2>
+        <p class="mt-2 text-neutral-400 text-sm">github.com/brianchaplow</p>
+        <p class="mt-1 text-neutral-500 text-xs">Code, configs, and project repos</p>
+      </a>
+
+      {/* BBQ Site */}
+      <a 
+        href="https://bytesbourbonbbq.com/"
+        target="_blank" 
+        rel="noopener"
+        class="group p-6 rounded-xl border border-orange-500/20 bg-orange-500/5 hover:bg-orange-500/10 transition-colors"
+      >
+        <div class="text-3xl mb-4">🔥</div>
+        <h2 class="text-lg font-semibold group-hover:text-orange-300">Bytes • Bourbon • BBQ</h2>
+        <p class="mt-2 text-neutral-400 text-sm">The creative side</p>
+        <p class="mt-1 text-neutral-500 text-xs">Security concepts through BBQ metaphors</p>
+      </a>
+
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,900 @@
+---
+// Interactive Architecture Diagram with animated data flows
+---
+
+<div class="arch-interactive not-prose my-12">
+  <div class="arch-container relative">
+    
+    {/* Animated background grid */}
+    <div class="absolute inset-0 overflow-hidden rounded-2xl">
+      <div class="grid-pattern absolute inset-0 opacity-30"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-transparent to-slate-900/80"></div>
+    </div>
+    
+    <div class="relative p-8 md:p-12">
+      
+      {/* Header */}
+      <div class="text-center mb-8">
+        <h3 class="text-xs font-mono uppercase tracking-[0.2em] text-cyan-400/70 mb-2">System Architecture</h3>
+        <p class="text-neutral-500 text-sm">Click any component for details • Watch the data flow</p>
+      </div>
+      
+      {/* === EDGE LAYER === */}
+      <div class="arch-layer" data-layer="edge">
+        <div class="layer-label edge">
+          <span class="label-dot"></span>
+          Edge Security
+        </div>
+        
+        <div class="flex justify-center">
+          <button class="arch-node edge group" data-component="cloudflare" aria-label="Cloudflare details">
+            <div class="node-glow"></div>
+            <div class="node-content">
+              <div class="node-icon">🛡️</div>
+              <div class="node-name">Cloudflare</div>
+              <div class="node-detail">WAF • Bot Fight • JA3</div>
+              <div class="node-status online">
+                <span class="status-dot"></span>
+                Protecting
+              </div>
+            </div>
+          </button>
+        </div>
+        
+        {/* Protected Sites */}
+        <div class="protected-sites mt-6">
+          <div class="sites-label">Protected Sites</div>
+          <div class="sites-list">
+            <a href="https://brianchaplow.com" class="site-badge" target="_blank" rel="noopener">
+              <span class="site-dot"></span>
+              brianchaplow.com
+            </a>
+            <a href="https://bytesbourbonbbq.com" class="site-badge" target="_blank" rel="noopener">
+              <span class="site-dot"></span>
+              bytesbourbonbbq.com
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      {/* Connection with animated flow */}
+      <div class="flow-connector">
+        <div class="flow-line"></div>
+        <div class="flow-particles">
+          <div class="particle" style="--delay: 0s"></div>
+          <div class="particle" style="--delay: 0.5s"></div>
+          <div class="particle" style="--delay: 1s"></div>
+        </div>
+        <div class="flow-label">HTTPS</div>
+      </div>
+      
+      {/* === CLOUD LAYER === */}
+      <div class="arch-layer" data-layer="cloud">
+        <div class="layer-label cloud">
+          <span class="label-dot"></span>
+          Cloud Hosting
+        </div>
+        
+        <div class="flex justify-center">
+          <button class="arch-node cloud group" data-component="gcp" aria-label="GCP VM details">
+            <div class="node-glow"></div>
+            <div class="node-content">
+              <div class="node-icon">☁️</div>
+              <div class="node-name">GCP VM</div>
+              <div class="node-detail">Apache • Fluent Bit</div>
+              <div class="node-badge">e2-small • us-east4</div>
+            </div>
+          </button>
+        </div>
+      </div>
+      
+      {/* VPN Connection */}
+      <div class="flow-connector vpn">
+        <div class="flow-line encrypted"></div>
+        <div class="flow-particles encrypted">
+          <div class="particle" style="--delay: 0s"></div>
+          <div class="particle" style="--delay: 0.4s"></div>
+          <div class="particle" style="--delay: 0.8s"></div>
+        </div>
+        <div class="flow-label vpn-label">
+          <svg class="w-3 h-3 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+          </svg>
+          Tailscale VPN
+        </div>
+      </div>
+      
+      {/* === FIREWALL LAYER === */}
+      <div class="arch-layer" data-layer="firewall">
+        <div class="layer-label firewall">
+          <span class="label-dot"></span>
+          Network Perimeter
+        </div>
+        
+        <div class="flex justify-center">
+          <button class="arch-node firewall group" data-component="opnsense" aria-label="OPNsense details">
+            <div class="node-glow"></div>
+            <div class="node-content">
+              <div class="node-icon">🔥</div>
+              <div class="node-name">OPNsense</div>
+              <div class="node-detail">Protectli VP2420</div>
+              <div class="node-ip">10.10.10.1</div>
+            </div>
+          </button>
+        </div>
+      </div>
+      
+      <div class="flow-connector">
+        <div class="flow-line"></div>
+        <div class="flow-particles">
+          <div class="particle" style="--delay: 0.2s"></div>
+          <div class="particle" style="--delay: 0.7s"></div>
+        </div>
+      </div>
+      
+      {/* === CORE INFRASTRUCTURE === */}
+      <div class="arch-layer" data-layer="core">
+        <div class="layer-label core">
+          <span class="label-dot"></span>
+          Core Infrastructure
+        </div>
+        
+        <div class="flex justify-center gap-6 flex-wrap">
+          <button class="arch-node switch group" data-component="switch" aria-label="Switch details">
+            <div class="node-glow"></div>
+            <div class="node-content">
+              <div class="node-icon">🔀</div>
+              <div class="node-name">MokerLink 10G</div>
+              <div class="node-detail">12-Port • SPAN → SOC</div>
+              <div class="node-ip">10.10.10.2</div>
+            </div>
+          </button>
+          
+          <button class="arch-node soc group" data-component="soc" aria-label="SOC details">
+            <div class="node-glow"></div>
+            <div class="node-content">
+              <div class="node-icon">🖥️</div>
+              <div class="node-name">QNAP SOC</div>
+              <div class="node-detail">OpenSearch • Suricata</div>
+              <div class="node-ip">10.10.20.10</div>
+              <div class="node-status online">
+                <span class="status-dot"></span>
+                9 Containers
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+      
+      <div class="flow-connector">
+        <div class="flow-line"></div>
+        <div class="flow-particles multi">
+          <div class="particle" style="--delay: 0s; --offset: -10px"></div>
+          <div class="particle" style="--delay: 0.3s; --offset: 0px"></div>
+          <div class="particle" style="--delay: 0.6s; --offset: 10px"></div>
+        </div>
+      </div>
+      
+      {/* === VLAN SEGMENTS === */}
+      <div class="arch-layer" data-layer="segments">
+        <div class="layer-label segments">
+          <span class="label-dot"></span>
+          Network Segments
+        </div>
+        
+        <div class="vlan-grid">
+          <div class="vlan-card mgmt" data-vlan="10">
+            <div class="vlan-id">VLAN 10</div>
+            <div class="vlan-name">Management</div>
+            <div class="vlan-subnet">10.10.10.0/24</div>
+          </div>
+          <div class="vlan-card soc-vlan" data-vlan="20">
+            <div class="vlan-id">VLAN 20</div>
+            <div class="vlan-name">SOC</div>
+            <div class="vlan-subnet">10.10.20.0/24</div>
+            <div class="vlan-badge soc-badge">QNAP + Kali</div>
+          </div>
+          <div class="vlan-card" data-vlan="30">
+            <div class="vlan-id">VLAN 30</div>
+            <div class="vlan-name">Lab</div>
+            <div class="vlan-subnet">10.10.30.0/24</div>
+            <div class="vlan-badge lab-badge">Proxmox + AD</div>
+          </div>
+          <div class="vlan-card vulnerable" data-vlan="40">
+            <div class="vlan-id">VLAN 40</div>
+            <div class="vlan-name">Targets</div>
+            <div class="vlan-subnet">10.10.40.0/24</div>
+            <div class="vlan-badge">Isolated</div>
+          </div>
+          <div class="vlan-card iot" data-vlan="50">
+            <div class="vlan-id">VLAN 50</div>
+            <div class="vlan-name">IoT</div>
+            <div class="vlan-subnet">10.10.50.0/24</div>
+            <div class="vlan-badge iot-badge">Hue + Eufy</div>
+          </div>
+        </div>
+      </div>
+      
+      {/* === DATA FLOWS LEGEND === */}
+      <div class="data-flows mt-10 pt-8 border-t border-white/10">
+        <div class="flows-title">Data Flows</div>
+        <div class="flows-grid">
+          <div class="flow-item" data-flow="web">
+            <div class="flow-icon web">🌐</div>
+            <div class="flow-info">
+              <div class="flow-name">Production Traffic</div>
+              <div class="flow-path">
+                Sites → Cloudflare → GCP → <span class="highlight">Fluent Bit</span> → <span class="highlight">OpenSearch</span>
+              </div>
+            </div>
+          </div>
+          <div class="flow-item" data-flow="nids">
+            <div class="flow-icon nids">🔍</div>
+            <div class="flow-info">
+              <div class="flow-name">Network Detection</div>
+              <div class="flow-path">
+                All VLANs → SPAN → <span class="highlight">Suricata</span> (47,487 rules) → <span class="highlight">OpenSearch</span>
+              </div>
+            </div>
+          </div>
+          <div class="flow-item" data-flow="endpoint">
+            <div class="flow-icon endpoint">🖥️</div>
+            <div class="flow-info">
+              <div class="flow-name">Endpoint Telemetry</div>
+              <div class="flow-path">
+                Windows → <span class="highlight">Sysmon</span> → Fluent Bit → <span class="highlight">OpenSearch</span>
+              </div>
+            </div>
+          </div>
+          <div class="flow-item" data-flow="response">
+            <div class="flow-icon response">🚫</div>
+            <div class="flow-info">
+              <div class="flow-name">Automated Response</div>
+              <div class="flow-path">
+                New IP → <span class="highlight">AbuseIPDB</span> → Score ≥90 → <span class="highlight">Cloudflare Block</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  {/* Detail Panel (shows on component click) */}
+  <div id="detail-panel" class="detail-panel hidden" role="dialog" aria-labelledby="detail-title">
+    <button class="detail-close" aria-label="Close details">&times;</button>
+    <h4 id="detail-title" class="detail-title"></h4>
+    <div class="detail-content"></div>
+  </div>
+</div>
+
+<style>
+  .arch-interactive {
+    --edge-color: #f97316;
+    --cloud-color: #3b82f6;
+    --firewall-color: #ef4444;
+    --core-color: #00d4ff;
+    --segments-color: #00ff88;
+  }
+  
+  .arch-container {
+    background: linear-gradient(180deg, #0c0c14 0%, #080810 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  
+  .grid-pattern {
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMove 20s linear infinite;
+  }
+  
+  @keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(40px, 40px); }
+  }
+  
+  /* Layer Labels */
+  .layer-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  
+  .label-dot {
+    width: 4px;
+    height: 14px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+  
+  .layer-label.edge { color: var(--edge-color); }
+  .layer-label.cloud { color: var(--cloud-color); }
+  .layer-label.firewall { color: var(--firewall-color); }
+  .layer-label.core { color: var(--core-color); }
+  .layer-label.segments { color: var(--segments-color); }
+  
+  /* Arch Nodes */
+  .arch-node {
+    position: relative;
+    background: rgba(20, 20, 30, 0.8);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 1rem;
+    padding: 1.25rem 1.75rem;
+    min-width: 160px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .arch-node:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,255,255,0.2);
+  }
+  
+  .arch-node.edge:hover { border-color: var(--edge-color); box-shadow: 0 8px 30px -10px rgba(249,115,22,0.3); }
+  .arch-node.cloud:hover { border-color: var(--cloud-color); box-shadow: 0 8px 30px -10px rgba(59,130,246,0.3); }
+  .arch-node.firewall:hover { border-color: var(--firewall-color); box-shadow: 0 8px 30px -10px rgba(239,68,68,0.3); }
+  .arch-node.switch:hover { border-color: var(--core-color); box-shadow: 0 8px 30px -10px rgba(0,212,255,0.3); }
+  .arch-node.soc { border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.05); }
+  .arch-node.soc:hover { border-color: var(--core-color); box-shadow: 0 8px 30px -10px rgba(0,212,255,0.4); }
+  
+  .node-glow {
+    position: absolute;
+    inset: -1px;
+    border-radius: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .arch-node:hover .node-glow {
+    opacity: 1;
+  }
+  
+  .arch-node.edge .node-glow { box-shadow: inset 0 0 20px rgba(249,115,22,0.15); }
+  .arch-node.cloud .node-glow { box-shadow: inset 0 0 20px rgba(59,130,246,0.15); }
+  .arch-node.firewall .node-glow { box-shadow: inset 0 0 20px rgba(239,68,68,0.15); }
+  .arch-node.switch .node-glow, .arch-node.soc .node-glow { box-shadow: inset 0 0 20px rgba(0,212,255,0.15); }
+  
+  .node-content { position: relative; }
+  .node-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+  .node-name { font-weight: 600; font-size: 0.95rem; color: #fff; }
+  .node-detail { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #888; margin-top: 0.25rem; }
+  
+  .node-badge, .node-ip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--segments-color);
+    background: rgba(0,255,136,0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+    display: inline-block;
+  }
+  
+  .node-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    font-size: 0.65rem;
+    color: #888;
+  }
+  
+  .node-status.online { color: var(--segments-color); }
+  
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  
+  /* Protected Sites */
+  .protected-sites {
+    text-align: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(249,115,22,0.08) 0%, rgba(239,68,68,0.04) 100%);
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 0.75rem;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .sites-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--edge-color);
+    margin-bottom: 0.5rem;
+  }
+  
+  .sites-list {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  
+  .site-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #fff;
+    background: rgba(249,115,22,0.15);
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.4rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  
+  .site-badge:hover {
+    background: rgba(249,115,22,0.25);
+    transform: translateY(-1px);
+  }
+  
+  .site-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--segments-color);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  /* Flow Connectors */
+  .flow-connector {
+    position: relative;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .flow-line {
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+  }
+  
+  .flow-line.encrypted {
+    background: linear-gradient(180deg, rgba(139,92,246,0.4), rgba(139,92,246,0.1));
+  }
+  
+  .flow-particles {
+    position: absolute;
+    width: 2px;
+    height: 100%;
+  }
+  
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--core-color);
+    border-radius: 50%;
+    animation: flowDown 2s ease-in-out infinite;
+    animation-delay: var(--delay);
+    box-shadow: 0 0 6px var(--core-color);
+  }
+  
+  .flow-particles.encrypted .particle {
+    background: #8b5cf6;
+    box-shadow: 0 0 6px #8b5cf6;
+  }
+  
+  .flow-particles.multi .particle {
+    left: calc(50% + var(--offset, 0px));
+  }
+  
+  @keyframes flowDown {
+    0% { top: 0; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+  
+  .flow-label {
+    position: relative;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: #666;
+    background: #0c0c14;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+  }
+  
+  .vpn-label {
+    color: #8b5cf6;
+    background: rgba(139,92,246,0.1);
+  }
+  
+  /* VLAN Grid */
+  .vlan-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  .vlan-card {
+    position: relative;
+    background: rgba(0,255,136,0.03);
+    border: 1px solid rgba(0,255,136,0.15);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+  
+  .vlan-card:hover {
+    border-color: rgba(0,255,136,0.3);
+    transform: translateY(-2px);
+  }
+  
+  .vlan-card.attack {
+    border-color: rgba(239,68,68,0.3);
+    background: rgba(239,68,68,0.05);
+  }
+  
+  .vlan-card.vulnerable {
+    border-color: rgba(249,115,22,0.3);
+    background: rgba(249,115,22,0.05);
+  }
+  
+  .vlan-card.iot {
+    border-color: rgba(168,85,247,0.3);
+    background: rgba(168,85,247,0.05);
+  }
+  
+  .vlan-card.soc-vlan {
+    border-color: rgba(0,212,255,0.4);
+    background: rgba(0,212,255,0.08);
+  }
+  
+  .vlan-card.mgmt {
+    border-color: rgba(34,197,94,0.3);
+    background: rgba(34,197,94,0.05);
+  }
+  
+  .vlan-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--segments-color);
+  }
+  
+  .vlan-card.attack .vlan-id { color: #ef4444; }
+  .vlan-card.vulnerable .vlan-id { color: #f97316; }
+  .vlan-card.iot .vlan-id { color: #a855f7; }
+  .vlan-card.soc-vlan .vlan-id { color: #00d4ff; }
+  .vlan-card.mgmt .vlan-id { color: #22c55e; }
+  
+  .vlan-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0.25rem 0;
+  }
+  
+  .vlan-subnet {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: #666;
+  }
+  
+  .vlan-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.2rem;
+    margin-top: 0.4rem;
+    display: inline-block;
+  }
+  
+  .vlan-card.attack .vlan-badge {
+    background: rgba(239,68,68,0.2);
+    color: #ef4444;
+  }
+  
+  .vlan-card.vulnerable .vlan-badge {
+    background: rgba(249,115,22,0.2);
+    color: #f97316;
+  }
+  
+  .vlan-card.iot .vlan-badge, .vlan-badge.iot-badge {
+    background: rgba(168,85,247,0.2);
+    color: #a855f7;
+  }
+  
+  .vlan-badge.soc-badge {
+    background: rgba(0,212,255,0.2);
+    color: #00d4ff;
+  }
+  
+  .vlan-badge.lab-badge {
+    background: rgba(0,255,136,0.15);
+    color: #00ff88;
+  }
+  
+  /* Data Flows */
+  .data-flows { }
+  
+  .flows-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #666;
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+  
+  .flows-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  .flow-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  }
+  
+  .flow-item:hover {
+    background: rgba(255,255,255,0.04);
+  }
+  
+  .flow-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+  
+  .flow-info { flex: 1; }
+  
+  .flow-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.25rem;
+  }
+  
+  .flow-path {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: #666;
+    line-height: 1.6;
+  }
+  
+  .flow-path .highlight {
+    color: var(--core-color);
+  }
+  
+  /* Detail Panel */
+  .detail-panel {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 320px;
+    background: rgba(15,15,25,0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    z-index: 100;
+    box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+  }
+  
+  .detail-panel.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+  }
+  
+  .detail-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    color: #888;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: all 0.2s ease;
+  }
+  
+  .detail-close:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+  }
+  
+  .detail-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.75rem;
+    padding-right: 2rem;
+  }
+  
+  .detail-content {
+    font-size: 0.85rem;
+    color: #a0a0a0;
+    line-height: 1.6;
+  }
+  
+  .detail-content strong {
+    color: #fff;
+  }
+  
+  .detail-content code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.1);
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.25rem;
+  }
+  
+  /* Arch Layer spacing */
+  .arch-layer {
+    margin-bottom: 0.5rem;
+  }
+</style>
+
+<script>
+  // Component details data
+  const componentDetails: Record<string, { title: string; content: string }> = {
+    cloudflare: {
+      title: '🛡️ Cloudflare Edge Security',
+      content: `
+        <p><strong>Role:</strong> First line of defense, hiding origin server IP and filtering malicious traffic.</p>
+        <p style="margin-top: 0.5rem;"><strong>Features enabled:</strong></p>
+        <ul style="margin: 0.5rem 0; padding-left: 1rem; font-size: 0.8rem;">
+          <li>Web Application Firewall (WAF)</li>
+          <li>Bot Fight Mode</li>
+          <li>JA3 TLS Fingerprinting</li>
+          <li>API-driven IP blocking</li>
+        </ul>
+        <p style="margin-top: 0.5rem;"><strong>Auto-blocks:</strong> <code>1,459+ IPs</code> via SOC automation</p>
+      `
+    },
+    gcp: {
+      title: '☁️ Google Cloud Platform',
+      content: `
+        <p><strong>Instance:</strong> e2-small in us-east4-a</p>
+        <p><strong>Public IP:</strong> <code>34.48.201.94</code></p>
+        <p><strong>Tailscale:</strong> <code>100.125.40.97</code></p>
+        <p style="margin-top: 0.5rem;"><strong>Services:</strong></p>
+        <ul style="margin: 0.5rem 0; padding-left: 1rem; font-size: 0.8rem;">
+          <li>Apache 2.4 with HTTP/2</li>
+          <li>Let's Encrypt SSL</li>
+          <li>Fluent Bit log shipper</li>
+          <li>Umami analytics (:3000)</li>
+        </ul>
+      `
+    },
+    opnsense: {
+      title: '🔥 OPNsense Firewall',
+      content: `
+        <p><strong>Hardware:</strong> Protectli VP2420</p>
+        <p><strong>Management:</strong> <code>https://10.10.10.1</code></p>
+        <p><strong>WAN:</strong> <code>108.56.24.246</code> (Verizon DHCP)</p>
+        <p style="margin-top: 0.5rem;"><strong>VLAN Gateways:</strong></p>
+        <ul style="margin: 0.5rem 0; padding-left: 1rem; font-size: 0.75rem; font-family: monospace;">
+          <li>VLAN 10: 10.10.10.1 (Mgmt)</li>
+          <li>VLAN 20: 10.10.20.1 (SOC)</li>
+          <li>VLAN 30: 10.10.30.1 (Lab)</li>
+          <li>VLAN 40: 10.10.40.1 (Targets)</li>
+          <li>VLAN 50: 10.10.50.1 (IoT)</li>
+        </ul>
+      `
+    },
+    switch: {
+      title: '🔀 MokerLink 12-Port 10G Switch',
+      content: `
+        <p><strong>Management:</strong> <code>http://10.10.10.2</code></p>
+        <p><strong>Trunk Port:</strong> TE1 → Protectli (all VLANs)</p>
+        <p style="margin-top: 0.5rem;"><strong>Port Assignments:</strong></p>
+        <ul style="margin: 0.5rem 0; padding-left: 1rem; font-size: 0.75rem;">
+          <li>TE2-3: Proxmox (VLAN 30)</li>
+          <li>TE4: Kali (VLAN 20)</li>
+          <li>TE5: IoT switch (VLAN 50)</li>
+          <li>TE6: Management laptop (VLAN 10)</li>
+          <li>TE9-10 (SFP+): QNAP (VLAN 20)</li>
+        </ul>
+        <p style="margin-top: 0.5rem;"><strong>SPAN:</strong> All ports mirror → TE10</p>
+      `
+    },
+    soc: {
+      title: '🖥️ QNAP SOC Platform',
+      content: `
+        <p><strong>Primary IP:</strong> <code>10.10.20.10</code> (eth5, SFP+)</p>
+        <p><strong>SPAN Interface:</strong> eth4 (no IP, capture only)</p>
+        <p><strong>Tailscale:</strong> <code>100.110.112.98</code></p>
+        <p style="margin-top: 0.5rem;"><strong>Services:</strong></p>
+        <ul style="margin: 0.5rem 0; padding-left: 1rem; font-size: 0.75rem;">
+          <li>OpenSearch: <code>:9200</code> (API) / <code>:5601</code> (Dashboards)</li>
+          <li>Suricata: 47,487 rules on eth4</li>
+          <li>Fluent Bit: <code>:5514</code> (syslog)</li>
+          <li>CyberChef: <code>:8000</code></li>
+          <li>Zeek, soc-automation, InfluxDB, Grafana</li>
+        </ul>
+        <p style="margin-top: 0.5rem;"><strong>9 containers total</strong></p>
+        <p style="margin-top: 0.5rem;"><strong>SSH:</strong> <code>ssh -p 2222 bchaplow@10.10.20.10</code></p>
+      `
+    }
+  };
+
+  // Handle component clicks
+  document.querySelectorAll('.arch-node[data-component]').forEach(node => {
+    node.addEventListener('click', () => {
+      const component = (node as HTMLElement).dataset.component;
+      if (!component || !componentDetails[component]) return;
+      
+      const panel = document.getElementById('detail-panel');
+      const title = document.getElementById('detail-title');
+      const content = panel?.querySelector('.detail-content');
+      
+      if (panel && title && content) {
+        title.textContent = componentDetails[component].title;
+        content.innerHTML = componentDetails[component].content;
+        panel.classList.remove('hidden');
+      }
+    });
+  });
+
+  // Close panel
+  document.querySelector('.detail-close')?.addEventListener('click', () => {
+    document.getElementById('detail-panel')?.classList.add('hidden');
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.getElementById('detail-panel')?.classList.add('hidden');
+    }
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', (e) => {
+    const panel = document.getElementById('detail-panel');
+    const target = e.target as HTMLElement;
+    if (panel && !panel.contains(target) && !target.closest('.arch-node')) {
+      panel.classList.add('hidden');
+    }
+  });
+</script>

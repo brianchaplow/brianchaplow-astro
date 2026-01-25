@@ -1,0 +1,341 @@
+---
+interface Props {
+  title?: string;
+  command: string;
+  output: string[];
+  typingSpeed?: number;
+  promptUser?: string;
+  promptHost?: string;
+}
+
+const { 
+  title = 'Terminal', 
+  command, 
+  output,
+  typingSpeed = 15,
+  promptUser = 'kali',
+  promptHost = 'attack'
+} = Astro.props;
+
+const outputId = `terminal-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class="terminal-container not-prose my-8">
+  <div class="terminal">
+    {/* Window chrome */}
+    <div class="terminal-header">
+      <div class="terminal-buttons">
+        <span class="btn-close"></span>
+        <span class="btn-minimize"></span>
+        <span class="btn-maximize"></span>
+      </div>
+      <div class="terminal-title">{title}</div>
+      <div class="terminal-spacer"></div>
+    </div>
+    
+    {/* Terminal content */}
+    <div class="terminal-body">
+      {/* Command prompt */}
+      <div class="terminal-line">
+        <span class="prompt">
+          <span class="prompt-user">{promptUser}</span>
+          <span class="prompt-at">@</span>
+          <span class="prompt-host">{promptHost}</span>
+          <span class="prompt-separator">:</span>
+          <span class="prompt-path">~</span>
+          <span class="prompt-symbol">$</span>
+        </span>
+        <span class="command" data-command={command}></span>
+        <span class="cursor">▋</span>
+      </div>
+      
+      {/* Output area */}
+      <div id={outputId} class="terminal-output" data-output={JSON.stringify(output)} data-speed={typingSpeed}>
+      </div>
+    </div>
+  </div>
+  
+  {/* Replay button */}
+  <button class="replay-btn" data-target={outputId} aria-label="Replay animation">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+    </svg>
+    Replay
+  </button>
+</div>
+
+<style>
+  .terminal-container {
+    position: relative;
+  }
+  
+  .terminal {
+    background: #1a1b26;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 
+      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  
+  .terminal-header {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: #16161e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .terminal-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .terminal-buttons span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  
+  .btn-close { background: #ff5f56; }
+  .btn-minimize { background: #ffbd2e; }
+  .btn-maximize { background: #27c93f; }
+  
+  .terminal-title {
+    flex: 1;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #565f89;
+    font-family: 'SF Mono', 'JetBrains Mono', monospace;
+  }
+  
+  .terminal-spacer {
+    width: 52px;
+  }
+  
+  .terminal-body {
+    padding: 1rem 1.25rem;
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .terminal-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .prompt {
+    color: #565f89;
+  }
+  
+  .prompt-user { color: #7aa2f7; }
+  .prompt-at { color: #565f89; }
+  .prompt-host { color: #9ece6a; }
+  .prompt-separator { color: #565f89; }
+  .prompt-path { color: #bb9af7; }
+  .prompt-symbol { color: #565f89; }
+  
+  .command {
+    color: #c0caf5;
+  }
+  
+  .cursor {
+    color: #7aa2f7;
+    animation: blink 1s step-end infinite;
+  }
+  
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+  
+  .cursor.typing {
+    animation: none;
+    opacity: 1;
+  }
+  
+  .cursor.hidden {
+    display: none;
+  }
+  
+  .terminal-output {
+    margin-top: 0.75rem;
+  }
+  
+  .output-line {
+    color: #a9b1d6;
+    white-space: pre-wrap;
+    word-break: break-all;
+    opacity: 0;
+    animation: fadeIn 0.1s ease forwards;
+  }
+  
+  .output-line.success { color: #9ece6a; }
+  .output-line.error { color: #f7768e; }
+  .output-line.warning { color: #e0af68; }
+  .output-line.info { color: #7aa2f7; }
+  .output-line.highlight { color: #bb9af7; }
+  .output-line.dim { color: #565f89; }
+  
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  
+  .replay-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.4rem;
+    color: #565f89;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+  }
+  
+  .replay-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #a9b1d6;
+  }
+  
+  /* Scrollbar styling */
+  .terminal-body::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .terminal-body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .terminal-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+  
+  .terminal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+</style>
+
+<script>
+  interface TerminalState {
+    command: string;
+    output: string[];
+    speed: number;
+    commandEl: HTMLElement;
+    outputEl: HTMLElement;
+    cursorEl: HTMLElement;
+  }
+
+  function initTerminal(outputEl: HTMLElement): TerminalState | null {
+    const container = outputEl.closest('.terminal-body');
+    const commandEl = container?.querySelector('.command') as HTMLElement;
+    const cursorEl = container?.querySelector('.cursor') as HTMLElement;
+    
+    if (!commandEl || !cursorEl) return null;
+    
+    const command = commandEl.dataset.command || '';
+    const output = JSON.parse(outputEl.dataset.output || '[]');
+    const speed = parseInt(outputEl.dataset.speed || '30');
+    
+    return { command, output, speed, commandEl, outputEl, cursorEl };
+  }
+
+  async function typeCommand(state: TerminalState): Promise<void> {
+    const { command, speed, commandEl, cursorEl } = state;
+    cursorEl.classList.add('typing');
+    
+    for (let i = 0; i <= command.length; i++) {
+      commandEl.textContent = command.slice(0, i);
+      await new Promise(r => setTimeout(r, speed + Math.random() * 30));
+    }
+    
+    cursorEl.classList.remove('typing');
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  async function showOutput(state: TerminalState): Promise<void> {
+    const { output, outputEl, cursorEl } = state;
+    cursorEl.classList.add('hidden');
+    outputEl.innerHTML = '';
+    
+    for (const line of output) {
+      const lineEl = document.createElement('div');
+      lineEl.className = 'output-line';
+      
+      // Parse line type markers
+      if (line.startsWith('[+]')) {
+        lineEl.classList.add('success');
+      } else if (line.startsWith('[-]') || line.startsWith('[!]')) {
+        lineEl.classList.add('error');
+      } else if (line.startsWith('[*]')) {
+        lineEl.classList.add('info');
+      } else if (line.startsWith('[>]')) {
+        lineEl.classList.add('highlight');
+      } else if (line.startsWith('[~]')) {
+        lineEl.classList.add('dim');
+      }
+      
+      lineEl.textContent = line;
+      outputEl.appendChild(lineEl);
+      
+      // Faster output - 20-40ms per line
+      await new Promise(r => setTimeout(r, 20 + Math.random() * 20));
+    }
+  }
+
+  async function runTerminal(outputEl: HTMLElement): Promise<void> {
+    const state = initTerminal(outputEl);
+    if (!state) return;
+    
+    // Reset
+    state.commandEl.textContent = '';
+    state.outputEl.innerHTML = '';
+    state.cursorEl.classList.remove('hidden');
+    
+    await new Promise(r => setTimeout(r, 500));
+    await typeCommand(state);
+    await showOutput(state);
+  }
+
+  // Initialize all terminals on page load
+  const observerOptions = {
+    threshold: 0.3,
+    rootMargin: '0px 0px -100px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        runTerminal(entry.target as HTMLElement);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.terminal-output').forEach(el => {
+    observer.observe(el);
+  });
+
+  // Replay buttons
+  document.querySelectorAll('.replay-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = (btn as HTMLElement).dataset.target;
+      if (targetId) {
+        const outputEl = document.getElementById(targetId);
+        if (outputEl) runTerminal(outputEl);
+      }
+    });
+  });
+</script>

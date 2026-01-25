@@ -1,0 +1,104 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import site from '@/data/site.json';
+---
+
+<BaseLayout 
+  title="About"
+  description="Background, experience, and what drives Brian S. Chaplow's approach to cybersecurity."
+>
+  <article class="py-12">
+    <div class="md:flex md:gap-12">
+
+      {/* Left: Photo + Resume Request */}
+      <div class="shrink-0 mb-8 md:mb-0 w-48">
+        <img 
+          src="/images/brian-chaplow.jpg"
+          alt="Brian S. Chaplow"
+          class="w-48 h-48 rounded-2xl object-cover ring-2 ring-cyan-500/30" 
+        />
+
+        <form action="https://formspree.io/f/xqardyyz" method="POST" class="mt-4 space-y-2">
+          <input 
+            type="text" 
+            name="name" 
+            placeholder="Your name" 
+            required
+            class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/50" 
+          />
+          <input 
+            type="email" 
+            name="email" 
+            placeholder="Your email" 
+            required
+            class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/50" 
+          />
+          <input 
+            type="text" 
+            name="company" 
+            placeholder="Company (optional)"
+            class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/50" 
+          />
+          <textarea 
+            name="message" 
+            placeholder="Quick note (optional)" 
+            rows="2"
+            class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 resize-none"
+          ></textarea>
+          <input type="hidden" name="_subject" value="Résumé Request - brianchaplow.com" />
+          <input type="hidden" name="_next" value="https://brianchaplow.com/resume-thanks/" />
+          <button 
+            type="submit"
+            class="w-full px-4 py-2 rounded-lg bg-cyan-500/10 ring-1 ring-cyan-500/40 hover:bg-cyan-500/20 text-sm"
+          >
+            Request Résumé
+          </button>
+        </form>
+
+        <a 
+          href={site.author.linkedin} 
+          target="_blank" 
+          rel="noopener"
+          class="mt-2 block text-center text-xs text-neutral-400 hover:text-cyan-300"
+        >
+          or view on LinkedIn →
+        </a>
+      </div>
+
+      {/* Right: Story */}
+      <div class="max-w-2xl">
+        <h1 class="text-3xl font-semibold">About Me</h1>
+
+        <p class="mt-6 text-neutral-300 text-lg leading-relaxed">
+          I spent 26 years in the Navy, the last several as an Emergency Operations Center Chief. My job was monitoring, triage, and escalation — watching multiple feeds, deciding what mattered, and getting the right people moving fast. Sound familiar?
+        </p>
+
+        <p class="mt-4 text-neutral-300 leading-relaxed">
+          The EOC runs on playbooks. I wrote them, refined them, and trained teams to execute them under pressure. When something breaks at 0300, you don't improvise — you follow the procedure, document everything, and hand off clean. That's the discipline I bring to security operations.
+        </p>
+
+        <p class="mt-4 text-neutral-300 leading-relaxed">
+          Now I'm applying that experience to SOC work. Alert triage, incident response, escalation workflows — it's the same operational rhythm, different domain. I've built a <a href="/projects/homelab-soc/" class="text-cyan-400 underline">homelab SOC</a> to get hands-on with the tooling: Suricata, OpenSearch, Fluent Bit. Real alerts, real tuning, real detection engineering.
+        </p>
+
+        <p class="mt-4 text-neutral-300 leading-relaxed">
+          I also write at <a href="https://bytesbourbonbbq.com/" class="text-cyan-400 underline">Bytes • Bourbon • BBQ</a> — security concepts explained through BBQ metaphors. Because clear communication matters as much as technical skill.
+        </p>
+
+        {/* Credentials - compact */}
+        <div class="mt-8 p-4 rounded-xl bg-white/5 border border-white/10">
+          <p class="text-sm text-neutral-400">
+            <strong class="text-neutral-200">Credentials:</strong>
+            M.S. Data Science (Cybersecurity) · CompTIA Security+ · 26 years U.S. Navy · EOC Chief · Playbook Development
+          </p>
+        </div>
+
+        {/* CTA */}
+        <p class="mt-8 text-neutral-300 leading-relaxed">
+          Looking for SOC analyst, CTI, or detection engineering roles. If you need someone who can monitor, triage, document, and stay calm when alerts start firing — <a href={`mailto:${site.author.email}`} class="text-cyan-400 underline">let's talk</a>.
+        </p>
+      </div>
+
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,38 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import site from '@/data/site.json';
+---
+
+<BaseLayout 
+  title="Thank You"
+  description="Thank you for your resume request."
+  robots="noindex, nofollow"
+>
+  <div class="py-24 text-center">
+    <div class="mx-auto w-16 h-16 rounded-full bg-cyan-500/20 ring-2 ring-cyan-500/40 flex items-center justify-center mb-8">
+      <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+    <h1 class="text-3xl font-semibold mb-4">Thank You!</h1>
+    <p class="text-neutral-300 text-lg max-w-md mx-auto mb-6">
+      Your résumé request has been received. I'll send it over shortly.
+    </p>
+    <p class="text-neutral-400 text-sm max-w-md mx-auto mb-8">
+      In the meantime, feel free to explore my projects or connect with me on LinkedIn.
+    </p>
+    <div class="flex justify-center gap-4 flex-wrap">
+      <a href="/projects/" class="px-6 py-2 rounded-lg bg-cyan-500/10 ring-1 ring-cyan-500/40 hover:bg-cyan-500/20 text-sm">
+        View Projects
+      </a>
+      <a 
+        href={site.author.linkedin} 
+        target="_blank" 
+        rel="noopener"
+        class="px-6 py-2 rounded-lg bg-white/5 ring-1 ring-white/10 hover:bg-white/10 text-sm"
+      >
+        LinkedIn Profile
+      </a>
+    </div>
+  </div>
+</BaseLayout>

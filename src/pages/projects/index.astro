@@ -1,0 +1,52 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+// Get all projects sorted by date (newest first)
+const projects = (await getCollection('projects'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// Helper to get project URL (respects custom permalinks)
+function getProjectUrl(project: typeof projects[0]) {
+  if (project.data.permalink) {
+    return project.data.permalink;
+  }
+  return `/projects/${project.slug}/`;
+}
+---
+
+<BaseLayout 
+  title="Projects"
+  description="Technical projects showcasing cybersecurity, data analytics, and infrastructure work."
+>
+  <section class="py-12">
+    <header class="mb-8">
+      <h1 class="text-3xl md:text-4xl font-semibold">Projects</h1>
+      <p class="mt-4 text-lg text-neutral-400 max-w-2xl">
+        Technical work demonstrating hands-on experience with security operations, 
+        data pipelines, and infrastructure engineering.
+      </p>
+    </header>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      {projects.length > 0 ? (
+        projects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            summary={project.data.summary}
+            date={project.data.date}
+            status={project.data.status}
+            technologies={project.data.technologies}
+            url={getProjectUrl(project)}
+          />
+        ))
+      ) : (
+        <div class="col-span-full text-center py-12 text-neutral-500">
+          <p class="text-4xl mb-4">🔧</p>
+          <p>Projects coming soon.</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
