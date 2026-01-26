@@ -1,11 +1,11 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import StatusIndicator from '@/components/StatusIndicator.astro';
-import TechBadge from '@/components/TechBadge.astro';
-import ProjectCard from '@/components/ProjectCard.astro';
-import { readableDate, isoDate } from '@/utils/dates';
+import StatusIndicator from '../components/interactive/StatusIndicator.astro';
+import TechBadge from '../components/projects/TechBadge.astro';
+import ProjectCard from '../components/projects/ProjectCard.astro';
+import { readableDate, isoDate } from '../utils/dates';
 import { getCollection } from 'astro:content';
-import site from '@/data/site.json';
+import site from '../data/site.json';
 
 interface Props {
   title: string;

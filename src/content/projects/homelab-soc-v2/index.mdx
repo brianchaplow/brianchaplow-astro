@@ -18,12 +18,12 @@ github: https://github.com/brianchaplow/HomeLab-SOC-v2
 permalink: /projects/homelab-soc/
 ---
 
-import StatsCounter from '../../components/StatsCounter.astro';
-import ArchitectureDiagramInteractive from '../../components/ArchitectureDiagramInteractive.astro';
-import Terminal from '../../components/Terminal.astro';
-import DashboardGallery from '../../components/DashboardGallery.astro';
-import DashboardShowcase from '../../components/DashboardShowcase.astro';
-import EvolutionTimeline from '../../components/EvolutionTimeline.astro';
+import StatsCounter from '../../../components/projects/StatsCounter.astro';
+import ArchitectureDiagramInteractive from '../../../components/interactive/ArchitectureDiagramInteractive.astro';
+import Terminal from '../../../components/interactive/Terminal.astro';
+import DashboardGallery from '../../../components/projects/DashboardGallery.astro';
+import DashboardShowcase from '../../../components/projects/DashboardShowcase.astro';
+import EvolutionTimeline from '../../../components/interactive/EvolutionTimeline.astro';
 
 <div class="not-prose text-center mb-12">
   <p class="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">They want experience I can't get without a job.</p>
@@ -31,7 +31,7 @@ import EvolutionTimeline from '../../components/EvolutionTimeline.astro';
 </div>
 
 <DashboardShowcase 
-  src="/images/projects/soc-homelab-v2/dashboard-soc-overview.png"
+  src="/images/projects/homelab-soc-v2/dashboard-soc-overview.png"
   alt="SOC Overview Dashboard - Real-time security monitoring"
   caption="Live SOC Dashboard — 51K+ alerts, 15 countries, real-time threat detection"
 />
@@ -80,7 +80,7 @@ Nine Docker containers on the QNAP handle detection, analysis, and response:
   </div>
   <div class="group text-center p-5 rounded-xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-300">
     <div class="text-lg font-semibold text-cyan-400 group-hover:text-cyan-300">Suricata</div>
-    <div class="text-sm text-neutral-500 mt-1">47,486 IDS Rules</div>
+    <div class="text-sm text-neutral-500 mt-1">47,487 IDS Rules</div>
   </div>
   <div class="group text-center p-5 rounded-xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-300">
     <div class="text-lg font-semibold text-cyan-400 group-hover:text-cyan-300">Fluent Bit</div>
@@ -106,21 +106,21 @@ I built four purpose-specific dashboards, each answering different operational q
 
 <DashboardGallery dashboards={[
   {
-    src: "/images/projects/soc-homelab-v2/dashboard-nids-detection.png",
+    src: "/images/projects/homelab-soc-v2/dashboard-nids-detection.png",
     alt: "NIDS dashboard showing Suricata alerts, signatures, and protocol distribution",
     title: "NIDS - Detection Overview",
     description: "Network detection focus: signatures triggered, protocol breakdown, and temporal patterns.",
-    highlight: "47,486 active rules"
+    highlight: "47,487 active rules"
   },
   {
-    src: "/images/projects/soc-homelab-v2/dashboard-windows-security.png",
+    src: "/images/projects/homelab-soc-v2/dashboard-windows-security.png",
     alt: "Endpoint dashboard showing Windows event distribution across hosts",
     title: "Endpoint - Windows Security",
     description: "Endpoint telemetry across Active Directory lab with full Sysmon coverage.",
     highlight: "83K+ Windows events"
   },
   {
-    src: "/images/projects/soc-homelab-v2/dashboard-threat-intel.png",
+    src: "/images/projects/homelab-soc-v2/dashboard-threat-intel.png",
     alt: "Threat Intelligence dashboard showing external IPs and geographic distribution",
     title: "Threat Intelligence",
     description: "External threat visibility with country attribution and automated enrichment.",

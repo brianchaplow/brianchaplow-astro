@@ -1,0 +1,41 @@
+/* ============================================
+   GLOBAL STYLES - brianchaplow.com
+   ============================================ */
+
+:root {
+  /* Brand Colors */
+  --color-primary: #00d4ff;
+  --color-secondary: #00ff88;
+  --color-accent: #f97316;
+  
+  /* Backgrounds */
+  --bg-dark: #0a0a0f;
+  --bg-card: rgba(255, 255, 255, 0.02);
+  --bg-card-hover: rgba(255, 255, 255, 0.05);
+  
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #666666;
+  
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --border-glow: rgba(0, 212, 255, 0.3);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: var(--color-primary);
+  color: var(--bg-dark);
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
