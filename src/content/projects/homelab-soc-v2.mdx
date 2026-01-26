@@ -40,7 +40,7 @@ import EvolutionTimeline from '../../components/EvolutionTimeline.astro';
   { value: 51843, label: "Suricata Alerts" },
   { value: 83704, label: "Windows Events" },
   { value: 15, label: "Countries Detected" },
-  { value: 1459, suffix: "+", label: "IPs Auto-Blocked" }
+  { value: 2000, suffix: "+", label: "IPs Auto-Blocked" }
 ]} />
 
 ## This Isn't a Tutorial Lab
@@ -71,7 +71,7 @@ The infrastructure spans three layers (edge, cloud, and on-premises) with traffi
 
 ## The SOC Stack
 
-Seven Docker containers on the QNAP handle detection, analysis, and response:
+Nine Docker containers on the QNAP handle detection, analysis, and response:
 
 <div class="not-prose grid grid-cols-2 gap-4 my-8">
   <div class="group text-center p-5 rounded-xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-300">
@@ -80,7 +80,7 @@ Seven Docker containers on the QNAP handle detection, analysis, and response:
   </div>
   <div class="group text-center p-5 rounded-xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-300">
     <div class="text-lg font-semibold text-cyan-400 group-hover:text-cyan-300">Suricata</div>
-    <div class="text-sm text-neutral-500 mt-1">47,290 IDS Rules</div>
+    <div class="text-sm text-neutral-500 mt-1">47,486 IDS Rules</div>
   </div>
   <div class="group text-center p-5 rounded-xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-300">
     <div class="text-lg font-semibold text-cyan-400 group-hover:text-cyan-300">Fluent Bit</div>
@@ -110,7 +110,7 @@ I built four purpose-specific dashboards, each answering different operational q
     alt: "NIDS dashboard showing Suricata alerts, signatures, and protocol distribution",
     title: "NIDS - Detection Overview",
     description: "Network detection focus: signatures triggered, protocol breakdown, and temporal patterns.",
-    highlight: "47,290 active rules"
+    highlight: "47,486 active rules"
   },
   {
     src: "/images/projects/soc-homelab-v2/dashboard-windows-security.png",
@@ -211,7 +211,7 @@ This build didn't appear overnight. It evolved from the [original HomeLab SOC](/
   { before: "Flat network", after: "5 VLANs with OPNsense", improvement: "Segmentation" },
   { before: "ISP router", after: "Protectli VP2420 firewall", improvement: "Proper routing" },
   { before: "No attack isolation", after: "Dedicated purple team VLANs", improvement: "Safe testing" },
-  { before: "~100 IPs blocked", after: "1,459+ IPs blocked", improvement: "14x volume" }
+  { before: "~100 IPs blocked", after: "2,000+ IPs blocked", improvement: "20x volume" }
 ]} />
 
 Each limitation in v1 became a learning opportunity. The progression shows continuous improvement—exactly what employers want to see.

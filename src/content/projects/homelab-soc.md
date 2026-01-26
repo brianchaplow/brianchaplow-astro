@@ -225,7 +225,7 @@ This build established the foundation, but several limitations drove the [v2 arc
 | Flat network | 5 VLANs with OPNsense firewall |
 | ISP router | Protectli VP2420 dedicated firewall |
 | No attack isolation | Dedicated purple team VLAN |
-| ~100 IPs blocked | 1,459+ IPs blocked |
+| ~100 IPs blocked | 2,000+ IPs blocked |
 
 The progression shows continuous improvement—each limitation became a learning opportunity and upgrade target.
 
