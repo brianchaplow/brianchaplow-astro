@@ -1,0 +1,451 @@
+---
+/**
+ * MLPipelineDiagram.astro
+ * Visual architecture diagram for the SOC-ML pipeline
+ * Shows data flow from OpenSearch through feature engineering to model output
+ */
+---
+
+<div class="ml-pipeline-diagram">
+  <div class="pipeline-header">
+    <span class="pipeline-label">SOC-ML Pipeline</span>
+    <span class="pipeline-version">XGBoost Binary Classifier</span>
+  </div>
+
+  <!-- Input Stage -->
+  <div class="pipeline-stage input-stage">
+    <div class="stage-label">
+      <span class="stage-dot input"></span>
+      Data Sources
+    </div>
+    <div class="stage-content">
+      <div class="data-source">
+        <div class="source-icon">📊</div>
+        <div class="source-info">
+          <div class="source-name">OpenSearch SIEM</div>
+          <div class="source-detail">smokehouse:9200</div>
+        </div>
+        <div class="source-stats">
+          <span class="stat">13M+ alerts</span>
+          <span class="stat">12.6M+ flows</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flow Arrow -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-arrow">↓</div>
+  </div>
+
+  <!-- Processing Stages -->
+  <div class="pipeline-stages">
+    <div class="pipeline-stage process-stage">
+      <div class="stage-box extract">
+        <div class="stage-icon">🔍</div>
+        <div class="stage-title">Extract & Label</div>
+        <div class="stage-desc">Temporal split<br/>Purple team labels</div>
+      </div>
+    </div>
+
+    <div class="stage-arrow">→</div>
+
+    <div class="pipeline-stage process-stage">
+      <div class="stage-box features">
+        <div class="stage-icon">⚙️</div>
+        <div class="stage-title">Feature Engineering</div>
+        <div class="stage-desc">35+ features<br/>Behavioral patterns</div>
+      </div>
+    </div>
+
+    <div class="stage-arrow">→</div>
+
+    <div class="pipeline-stage process-stage">
+      <div class="stage-box model">
+        <div class="stage-icon">🧠</div>
+        <div class="stage-title">XGBoost</div>
+        <div class="stage-desc">Binary classifier<br/>SHAP explanations</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flow Arrow -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-arrow">↓</div>
+  </div>
+
+  <!-- Output Stage -->
+  <div class="pipeline-stage output-stage">
+    <div class="stage-label">
+      <span class="stage-dot output"></span>
+      Outputs & Actions
+    </div>
+    <div class="output-grid">
+      <div class="output-item score">
+        <div class="output-value">0.0 – 1.0</div>
+        <div class="output-label">Threat Score</div>
+      </div>
+      <div class="output-item threshold">
+        <div class="output-thresholds">
+          <span class="threshold high">≥95% → Block</span>
+          <span class="threshold medium">≥80% → Alert</span>
+        </div>
+        <div class="output-label">Decision Thresholds</div>
+      </div>
+      <div class="output-item explain">
+        <div class="output-icon">📈</div>
+        <div class="output-label">SHAP Explanations</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Integration Actions -->
+  <div class="integration-actions">
+    <div class="action cloudflare">
+      <span class="action-icon">🛡️</span>
+      <span class="action-name">Cloudflare</span>
+      <span class="action-type">Auto-block</span>
+    </div>
+    <div class="action discord">
+      <span class="action-icon">💬</span>
+      <span class="action-name">Discord</span>
+      <span class="action-type">Alert + SHAP</span>
+    </div>
+    <div class="action opensearch">
+      <span class="action-icon">📝</span>
+      <span class="action-name">OpenSearch</span>
+      <span class="action-type">Score enrichment</span>
+    </div>
+  </div>
+
+  <div class="pipeline-footer">
+    <span>Deployed on sear (VLAN 20) • Data from smokehouse SIEM</span>
+  </div>
+</div>
+
+<style>
+  .ml-pipeline-diagram {
+    background: linear-gradient(180deg, #12121a 0%, #0a0a0f 100%);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 24px;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #e0e0e0;
+    margin: 2rem 0;
+  }
+
+  .pipeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .pipeline-label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #a855f7;
+    font-weight: 600;
+  }
+
+  .pipeline-version {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.7rem;
+    color: #666;
+  }
+
+  .pipeline-stage {
+    margin: 12px 0;
+  }
+
+  .stage-label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #888;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .stage-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .stage-dot.input {
+    background: #00d4ff;
+    box-shadow: 0 0 8px rgba(0,212,255,0.5);
+  }
+
+  .stage-dot.output {
+    background: #00ff88;
+    box-shadow: 0 0 8px rgba(0,255,136,0.5);
+  }
+
+  .input-stage .stage-content {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .data-source {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .source-icon {
+    font-size: 2rem;
+  }
+
+  .source-info {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .source-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #fff;
+  }
+
+  .source-detail {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: #00d4ff;
+  }
+
+  .source-stats {
+    display: flex;
+    gap: 12px;
+  }
+
+  .source-stats .stat {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.7rem;
+    background: rgba(0,212,255,0.1);
+    color: #00d4ff;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .flow-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+  }
+
+  .flow-line {
+    width: 2px;
+    height: 16px;
+    background: linear-gradient(180deg, rgba(168,85,247,0.5), rgba(168,85,247,0.2));
+  }
+
+  .flow-arrow {
+    color: #a855f7;
+    font-size: 0.9rem;
+  }
+
+  .pipeline-stages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 8px 0;
+  }
+
+  .stage-arrow {
+    color: #a855f7;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .stage-box {
+    background: rgba(30, 30, 45, 0.8);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: center;
+    min-width: 140px;
+    transition: all 0.2s ease;
+  }
+
+  .stage-box:hover {
+    transform: translateY(-2px);
+    border-color: rgba(168,85,247,0.4);
+  }
+
+  .stage-box.extract {
+    border-color: rgba(0,212,255,0.3);
+  }
+
+  .stage-box.features {
+    border-color: rgba(168,85,247,0.3);
+  }
+
+  .stage-box.model {
+    border-color: rgba(0,255,136,0.3);
+  }
+
+  .stage-icon {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+
+  .stage-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .stage-desc {
+    font-size: 0.7rem;
+    color: #888;
+    line-height: 1.4;
+  }
+
+  .output-stage .output-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .output-item {
+    background: rgba(0,255,136,0.05);
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .output-value {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #00ff88;
+  }
+
+  .output-thresholds {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .threshold {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .threshold.high {
+    background: rgba(239,68,68,0.2);
+    color: #ef4444;
+  }
+
+  .threshold.medium {
+    background: rgba(251,191,36,0.2);
+    color: #fbbf24;
+  }
+
+  .output-icon {
+    font-size: 1.5rem;
+  }
+
+  .output-label {
+    font-size: 0.7rem;
+    color: #888;
+    margin-top: 6px;
+  }
+
+  .integration-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    flex-wrap: wrap;
+  }
+
+  .action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+
+  .action-icon {
+    font-size: 1rem;
+  }
+
+  .action-name {
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .action-type {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.65rem;
+    color: #888;
+  }
+
+  .action.cloudflare {
+    border: 1px solid rgba(249,115,22,0.3);
+  }
+
+  .action.discord {
+    border: 1px solid rgba(88,101,242,0.3);
+  }
+
+  .action.opensearch {
+    border: 1px solid rgba(0,212,255,0.3);
+  }
+
+  .pipeline-footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.6rem;
+    color: #444;
+  }
+
+  @media (max-width: 640px) {
+    .pipeline-stages {
+      flex-direction: column;
+    }
+
+    .stage-arrow {
+      transform: rotate(90deg);
+    }
+
+    .data-source {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .source-stats {
+      justify-content: center;
+    }
+  }
+</style>

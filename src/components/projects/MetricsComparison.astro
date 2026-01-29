@@ -1,0 +1,290 @@
+---
+/**
+ * MetricsComparison.astro
+ * Visual comparison of ML metrics before and after data leakage fix
+ * Highlights that perfect scores are a warning sign in ML
+ */
+
+interface Props {
+  showWarning?: boolean;
+}
+
+const { showWarning = true } = Astro.props;
+---
+
+<div class="metrics-comparison">
+  <div class="comparison-header">
+    <span class="comparison-title">Model Performance</span>
+    <span class="comparison-subtitle">Before & After Leakage Fix</span>
+  </div>
+
+  <div class="metrics-grid">
+    <!-- Before Column -->
+    <div class="metrics-column before">
+      <div class="column-header">
+        <span class="column-icon">❌</span>
+        <span class="column-title">Initial (Leaky)</span>
+      </div>
+      <div class="metric-items">
+        <div class="metric-item">
+          <span class="metric-label">PR-AUC</span>
+          <span class="metric-value bad">1.0000</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">ROC-AUC</span>
+          <span class="metric-value bad">1.0000</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Precision</span>
+          <span class="metric-value bad">100%</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Recall</span>
+          <span class="metric-value bad">100%</span>
+        </div>
+      </div>
+      <div class="column-verdict bad">
+        <span class="verdict-icon">🚨</span>
+        <span class="verdict-text">Too perfect = Leakage</span>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="comparison-arrow">
+      <span class="arrow-icon">→</span>
+      <span class="arrow-label">Fixed</span>
+    </div>
+
+    <!-- After Column -->
+    <div class="metrics-column after">
+      <div class="column-header">
+        <span class="column-icon">✅</span>
+        <span class="column-title">After Fix (Actual)</span>
+      </div>
+      <div class="metric-items">
+        <div class="metric-item">
+          <span class="metric-label">PR-AUC</span>
+          <span class="metric-value good">0.997</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">ROC-AUC</span>
+          <span class="metric-value good">0.999</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Precision</span>
+          <span class="metric-value good">95.3%</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Recall</span>
+          <span class="metric-value good">99.3%</span>
+        </div>
+      </div>
+      <div class="column-verdict good">
+        <span class="verdict-icon">✓</span>
+        <span class="verdict-text">Behavioral = Trustworthy</span>
+      </div>
+    </div>
+  </div>
+
+  {showWarning && (
+    <div class="comparison-warning">
+      <span class="warning-icon">💡</span>
+      <span class="warning-text">Initial perfect scores indicated data leakage, not model quality. After removing leaky features, the model still performs excellently—proving the engineered features capture real attack behavior.</span>
+    </div>
+  )}
+</div>
+
+<style>
+  .metrics-comparison {
+    background: linear-gradient(135deg, rgba(168,85,247,0.05) 0%, rgba(0,212,255,0.05) 100%);
+    border: 1px solid rgba(168,85,247,0.2);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 2rem 0;
+  }
+
+  .comparison-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .comparison-title {
+    display: block;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #fff;
+  }
+
+  .comparison-subtitle {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .metrics-grid {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .metrics-column {
+    flex: 1;
+    min-width: 180px;
+    max-width: 220px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metrics-column.before {
+    border: 1px solid rgba(239,68,68,0.3);
+  }
+
+  .metrics-column.after {
+    border: 1px solid rgba(0,255,136,0.3);
+  }
+
+  .column-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .column-icon {
+    font-size: 1rem;
+  }
+
+  .column-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .metric-items {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .metric-label {
+    font-size: 0.75rem;
+    color: #888;
+  }
+
+  .metric-value {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .metric-value.bad {
+    color: #ef4444;
+  }
+
+  .metric-value.good {
+    color: #00ff88;
+  }
+
+  .column-verdict {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .column-verdict.bad {
+    background: rgba(239,68,68,0.1);
+    color: #ef4444;
+  }
+
+  .column-verdict.good {
+    background: rgba(0,255,136,0.1);
+    color: #00ff88;
+  }
+
+  .verdict-icon {
+    font-size: 0.9rem;
+  }
+
+  .comparison-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+  }
+
+  .arrow-icon {
+    font-size: 1.5rem;
+    color: #a855f7;
+    font-weight: bold;
+  }
+
+  .arrow-label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.6rem;
+    color: #a855f7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .comparison-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 14px;
+    background: rgba(251,191,36,0.1);
+    border: 1px solid rgba(251,191,36,0.3);
+    border-radius: 10px;
+  }
+
+  .warning-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .warning-text {
+    font-size: 0.8rem;
+    color: #fbbf24;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 500px) {
+    .metrics-grid {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .comparison-arrow {
+      transform: rotate(90deg);
+      padding: 12px 0;
+    }
+
+    .metrics-column {
+      max-width: 100%;
+      width: 100%;
+    }
+  }
+</style>

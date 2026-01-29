@@ -1,0 +1,416 @@
+---
+title: "SOC-ML: Machine Learning Threat Detection"
+summary: "Supervised ML pipeline for threat prioritization using XGBoost, trained on 13M+ alerts"
+description: "An end-to-end machine learning pipeline that learns from purple team exercises to automatically score and prioritize threats. Features SHAP interpretability, temporal train/test splits, and integration with automated Cloudflare blocking."
+date: 2026-01-20
+status: active
+featured: true
+technologies:
+  - Python
+  - XGBoost
+  - SHAP
+  - OpenSearch
+  - Suricata
+  - pandas
+  - Jupyter
+github: https://github.com/brianchaplow/HomeLab-SOC-v2
+permalink: /projects/soc-ml/
+---
+
+import StatsCounter from '../../../components/projects/StatsCounter.astro';
+import Terminal from '../../../components/interactive/Terminal.astro';
+import MLPipelineDiagram from '../../../components/interactive/MLPipelineDiagram.astro';
+import MetricsComparison from '../../../components/projects/MetricsComparison.astro';
+import DashboardShowcase from '../../../components/projects/DashboardShowcase.astro';
+
+<div class="not-prose text-center mb-12">
+  <p class="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">13 million alerts.</p>
+  <p class="text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mt-2">One model to prioritize them.</p>
+</div>
+
+<StatsCounter stats={[
+  { value: 249, suffix: "K+", label: "Alerts Scored" },
+  { value: 99.7, suffix: "%", label: "PR-AUC Score" },
+  { value: 173, label: "High Threats" },
+  { value: 35, suffix: "+", label: "Features" }
+]} />
+
+## Why Build This?
+
+Yes, there are excellent commercial ML-powered security tools like CrowdStrike, Darktrace, Vectra. They work well. But as a data scientist specialized in cybersecurity, I believe there's immense value in implementing concepts from the ground up. You don't truly understand a model until you've wrestled with its training data, debugged its failures, and explained its decisions.
+
+This project isn't about reinventing the wheel. It's about understanding how the wheel turns.
+
+## The Problem
+
+Traditional signature-based detection generates massive alert volumes. My Suricata IDS fires on everything from legitimate traffic to actual attacks, 13 million alerts and counting. Even with tuned rules, analyst fatigue is real.
+
+The question: **Can machine learning learn what a real attack looks like?**
+
+<div class="not-prose my-8 grid grid-cols-1 md:grid-cols-5 gap-4">
+  <div class="md:col-span-3 p-5 rounded-xl bg-purple-500/10 border border-purple-500/20">
+    <p class="font-semibold text-purple-300 mb-2">The Approach</p>
+    <p class="text-neutral-300 text-sm">Train a supervised classifier on labeled attack data from purple team exercises. The model learns behavioral patterns—not just signatures—to score new traffic in real-time. High-confidence threats get auto-blocked; suspicious activity gets flagged for human review.</p>
+  </div>
+  <div class="md:col-span-2 p-5 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+    <p class="font-semibold text-cyan-300 mb-2">For the Non-Nerds</p>
+    <p class="text-neutral-300 text-sm">Think of it like teaching a spam filter, but for network attacks. Show it enough examples of "this is bad" and "this is fine," and it learns to sort new traffic automatically—letting analysts focus on what matters.</p>
+  </div>
+</div>
+
+## Data Sources
+
+This isn't synthetic data or a pre-built dataset. Every record comes from my production SOC infrastructure:
+
+<div class="not-prose my-8 overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-white/10">
+        <th class="text-left py-3 px-4 font-semibold text-white">Source</th>
+        <th class="text-left py-3 px-4 font-semibold text-white">Volume</th>
+        <th class="text-left py-3 px-4 font-semibold text-white">Purpose</th>
+      </tr>
+    </thead>
+    <tbody class="text-neutral-300">
+      <tr class="border-b border-white/5 hover:bg-white/[0.02]">
+        <td class="py-3 px-4 font-medium text-cyan-400">Suricata Alerts</td>
+        <td class="py-3 px-4 font-mono text-sm">13M+ events</td>
+        <td class="py-3 px-4">Network IDS alerts with custom HOMELAB rules</td>
+      </tr>
+      <tr class="border-b border-white/5 hover:bg-white/[0.02]">
+        <td class="py-3 px-4 font-medium text-cyan-400">Flow Records</td>
+        <td class="py-3 px-4 font-mono text-sm">12.6M+ records</td>
+        <td class="py-3 px-4">Benign baseline traffic from normal operations</td>
+      </tr>
+      <tr class="border-b border-white/5 hover:bg-white/[0.02]">
+        <td class="py-3 px-4 font-medium text-cyan-400">Purple Team Labels</td>
+        <td class="py-3 px-4 font-mono text-sm">~2,500 attacks</td>
+        <td class="py-3 px-4">SQLmap, Nikto, directory traversal exercises</td>
+      </tr>
+      <tr class="hover:bg-white/[0.02]">
+        <td class="py-3 px-4 font-medium text-cyan-400">AbuseIPDB</td>
+        <td class="py-3 px-4 font-mono text-sm">Continuous</td>
+        <td class="py-3 px-4">External threat intelligence enrichment</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## The Pipeline
+
+<MLPipelineDiagram />
+
+The pipeline extracts data from OpenSearch, engineers 35+ features, trains an XGBoost classifier, and outputs probability scores with SHAP explanations. High-confidence predictions trigger automated responses.
+
+## Feature Engineering
+
+In machine learning, feature engineering is often where models succeed or fail. Raw data rarely predicts outcomes well on its own—you need to transform it into signals the model can learn from. I built 35+ features across four categories, a moderate feature set that balances expressiveness with interpretability:
+
+<div class="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-2xl">⏱️</span>
+      <h4 class="font-semibold text-white">Temporal Features</h4>
+    </div>
+    <ul class="text-sm text-neutral-400 space-y-1">
+      <li>• Hour/day cyclical encoding</li>
+      <li>• Time since previous alert</li>
+      <li>• Rolling frequency (1m, 5m, 15m, 1h)</li>
+    </ul>
+  </div>
+  
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-2xl">🌐</span>
+      <h4 class="font-semibold text-white">Network Features</h4>
+    </div>
+    <ul class="text-sm text-neutral-400 space-y-1">
+      <li>• Port categorization (web, SSH, DB)</li>
+      <li>• Protocol distribution (TCP/UDP)</li>
+      <li>• Byte/packet counts and ratios</li>
+    </ul>
+  </div>
+  
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-2xl">🎯</span>
+      <h4 class="font-semibold text-white">Behavioral Features</h4>
+    </div>
+    <ul class="text-sm text-neutral-400 space-y-1">
+      <li>• Unique destinations per source</li>
+      <li>• Port scanning indicators</li>
+      <li>• Geographic origin (GeoIP)</li>
+    </ul>
+  </div>
+  
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-2xl">🔔</span>
+      <h4 class="font-semibold text-white">Alert Features</h4>
+    </div>
+    <ul class="text-sm text-neutral-400 space-y-1">
+      <li>• Category groupings</li>
+      <li>• Temporal clustering</li>
+      <li>• <em class="text-amber-400">Carefully filtered for leakage</em></li>
+    </ul>
+  </div>
+</div>
+
+## The Critical Lesson: Data Leakage
+
+Here's where it got interesting. Initial training achieved **perfect 1.0 PR-AUC**.
+
+That's not a victory—that's a warning sign.
+
+<div class="not-prose my-6 p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
+  <p class="text-sm text-neutral-300"><strong class="text-amber-400">What is data leakage?</strong> It's when your training data contains information that "leaks" the answer—features that wouldn't be available in production, or that directly encode the label you're trying to predict. The model learns a shortcut instead of the actual patterns.</p>
+</div>
+
+Using SHAP analysis, I discovered the `severity` feature had a SHAP value of ~6.0 while everything else was below 1.0. The model learned a trivial rule: **"if severity == 1 → attack"**
+
+Suricata's severity field directly encodes alert importance. My custom HOMELAB attack rules all use severity 1. The model memorized metadata instead of learning behavioral patterns.
+
+**The fix:** Remove leaky features (`severity`, `signature_id`) and focus on network behavior.
+
+<MetricsComparison />
+
+The result? **0.997 PR-AUC** — still excellent, but now based on legitimate behavioral features instead of metadata shortcuts.
+
+## Understanding the SHAP Analysis
+
+SHAP (SHapley Additive exPlanations) reveals *why* the model makes each prediction. The beeswarm plot below shows feature importance across all predictions:
+
+<DashboardShowcase 
+  src="/images/projects/soc-ml/shap-summary.png"
+  alt="SHAP Feature Impact on Attack Prediction - showing behavioral features like dest_is_web, dest_port, and direction_encoded as top predictors"
+  caption="SHAP Beeswarm Plot — Each dot is one prediction; position shows impact on the attack score"
+/>
+
+<div class="not-prose my-6 p-5 rounded-xl bg-white/[0.02] border border-white/10">
+  <p class="font-semibold text-white mb-3">How to read this plot:</p>
+  <ul class="text-sm text-neutral-300 space-y-2">
+    <li><strong class="text-cyan-400">Vertical position:</strong> Features are ranked by importance (top = most influential)</li>
+    <li><strong class="text-cyan-400">Horizontal position:</strong> How much that feature pushed the prediction toward attack (right) or benign (left)</li>
+    <li><strong class="text-cyan-400">Color:</strong> The feature's actual value — <span class="text-red-400">red = high</span>, <span class="text-blue-400">blue = low</span></li>
+    <li><strong class="text-cyan-400">Clustering:</strong> When dots cluster together, the model treats those values consistently</li>
+  </ul>
+  <p class="text-sm text-neutral-400 mt-3">For example, `dest_is_web` (whether traffic targets port 80/443) is the top predictor. High values (red dots) push strongly toward "attack"—web servers are common targets.</p>
+</div>
+
+<div class="not-prose my-8 p-5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+  <p><strong class="text-emerald-300">Key insight:</strong> <span class="text-neutral-300">After removing leaky features, the model still performs excellently (0.997 PR-AUC) because the engineered features genuinely capture attack behavior. The leakage detection validated that we're learning real patterns, not shortcuts.</span></p>
+</div>
+
+## Model Performance
+
+<DashboardShowcase 
+  src="/images/projects/soc-ml/evaluation-plots.png"
+  alt="Model evaluation plots showing confusion matrix, PR curve, ROC curve, and feature importances"
+  caption="Evaluation Metrics — 99.9% ROC-AUC, 99.7% PR-AUC at 0.75 threshold"
+/>
+
+The evaluation plots show strong performance across all metrics:
+
+<div class="not-prose my-8 overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-white/10">
+        <th class="text-left py-3 px-4 font-semibold text-white">Metric</th>
+        <th class="text-left py-3 px-4 font-semibold text-white">Value</th>
+        <th class="text-left py-3 px-4 font-semibold text-white">Interpretation</th>
+      </tr>
+    </thead>
+    <tbody class="text-neutral-300">
+      <tr class="border-b border-white/5 hover:bg-white/[0.02]">
+        <td class="py-3 px-4 font-medium text-cyan-400">PR-AUC</td>
+        <td class="py-3 px-4 font-mono text-emerald-400">0.997</td>
+        <td class="py-3 px-4">Near-perfect precision-recall tradeoff</td>
+      </tr>
+      <tr class="border-b border-white/5 hover:bg-white/[0.02]">
+        <td class="py-3 px-4 font-medium text-cyan-400">ROC-AUC</td>
+        <td class="py-3 px-4 font-mono text-emerald-400">0.999</td>
+        <td class="py-3 px-4">Excellent discrimination ability</td>
+      </tr>
+      <tr class="border-b border-white/5 hover:bg-white/[0.02]">
+        <td class="py-3 px-4 font-medium text-cyan-400">True Positives</td>
+        <td class="py-3 px-4 font-mono">4,658</td>
+        <td class="py-3 px-4">Attacks correctly identified</td>
+      </tr>
+      <tr class="border-b border-white/5 hover:bg-white/[0.02]">
+        <td class="py-3 px-4 font-medium text-cyan-400">False Negatives</td>
+        <td class="py-3 px-4 font-mono">35</td>
+        <td class="py-3 px-4">Missed attacks (0.7% miss rate)</td>
+      </tr>
+      <tr class="hover:bg-white/[0.02]">
+        <td class="py-3 px-4 font-medium text-cyan-400">False Positives</td>
+        <td class="py-3 px-4 font-mono">231</td>
+        <td class="py-3 px-4">Benign flagged as attacks (0.9% FP rate)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## Training Methodology
+
+Proper ML practices prevent subtle data leakage:
+
+<div class="not-prose my-8 space-y-4">
+  <div class="flex items-start gap-4 p-4 rounded-lg bg-white/[0.02] border border-white/10">
+    <span class="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">1</span>
+    <div>
+      <h4 class="font-semibold text-white">Temporal Train/Test Split</h4>
+      <p class="text-sm text-neutral-400 mt-1">Training: Dec 3, 2025 – Jan 15, 2026 | Testing: Jan 16–20, 2026<br/>No random splitting—that would leak future knowledge into training.</p>
+    </div>
+  </div>
+  
+  <div class="flex items-start gap-4 p-4 rounded-lg bg-white/[0.02] border border-white/10">
+    <span class="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">2</span>
+    <div>
+      <h4 class="font-semibold text-white">Class Balancing</h4>
+      <p class="text-sm text-neutral-400 mt-1">Attack class: ~2,500 samples (all available)<br/>Benign class: 50,000 undersampled for balance</p>
+    </div>
+  </div>
+  
+  <div class="flex items-start gap-4 p-4 rounded-lg bg-white/[0.02] border border-white/10">
+    <span class="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">3</span>
+    <div>
+      <h4 class="font-semibold text-white">Threshold Optimization</h4>
+      <p class="text-sm text-neutral-400 mt-1">≥95% confidence → Auto-block at Cloudflare<br/>≥80% confidence → Discord alert for analyst review</p>
+    </div>
+  </div>
+</div>
+
+## SOC Integration
+
+The model doesn't exist in isolation. It plugs directly into my SOC automation:
+
+<Terminal 
+  title="soc-automation/ml_scoring.py"
+  promptUser="root"
+  promptHost="smokehouse"
+  command="cat /opt/soc-automation/ml_scoring.py"
+  output={[
+    "from soc_ml import load_model, predict",
+    "",
+    "model = load_model('/models/xgboost_threat_v2.json')",
+    "score = model.predict_proba(features)[0, 1]",
+    "",
+    "if score >= 0.95:",
+    "    # High confidence - auto-block at Cloudflare",
+    "    block_ip(ip, reason=f'ML threat score: {score:.2f}')",
+    "    log_action('AUTO_BLOCK', ip, score)",
+    "",
+    "elif score >= 0.80:",
+    "    # Suspicious - alert for human review",
+    "    send_discord_alert(",
+    "        ip=ip,",
+    "        score=score,",
+    "        shap_explanation=explain(model, features)",
+    "    )"
+  ]}
+/>
+
+High-confidence threats get blocked automatically. Suspicious traffic gets flagged with SHAP explanations so I understand *why* the model flagged it.
+
+## What This Demonstrates
+
+<div class="not-prose my-8 grid grid-cols-2 md:grid-cols-3 gap-4">
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="text-lg mb-2">🧠</div>
+    <h4 class="font-semibold text-white mb-1">ML Engineering</h4>
+    <p class="text-sm text-neutral-500">XGBoost, class imbalance, threshold optimization, SHAP interpretability</p>
+  </div>
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="text-lg mb-2">🔧</div>
+    <h4 class="font-semibold text-white mb-1">Feature Engineering</h4>
+    <p class="text-sm text-neutral-500">35+ features from raw data, domain knowledge applied to encoding</p>
+  </div>
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="text-lg mb-2">🔍</div>
+    <h4 class="font-semibold text-white mb-1">Data Leakage Detection</h4>
+    <p class="text-sm text-neutral-500">Identified and fixed critical leakage using SHAP analysis</p>
+  </div>
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="text-lg mb-2">⚙️</div>
+    <h4 class="font-semibold text-white mb-1">MLOps Practices</h4>
+    <p class="text-sm text-neutral-500">Temporal splits, model versioning, config-driven pipelines</p>
+  </div>
+  <div class="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+    <div class="text-lg mb-2">🛡️</div>
+    <h4 class="font-semibold text-white mb-1">Security Domain</h4>
+    <p class="text-sm text-neutral-500">Suricata IDS, threat detection, SOC integration</p>
+  </div>
+  <div class="p-5 rounded-xl border border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10 transition-colors">
+    <div class="text-lg mb-2">🎯</div>
+    <h4 class="font-semibold text-purple-400 mb-1">Real-World Application</h4>
+    <p class="text-sm text-neutral-400">Production data, automated response, measurable impact</p>
+  </div>
+</div>
+
+---
+
+## Production Dashboard (24-Hour View)
+
+This is the actual OpenSearch dashboard running in my SOC, showing ML scoring results over the past 24 hours:
+
+<DashboardShowcase 
+  src="/images/projects/soc-ml/opensearch-ml-dashboard.png"
+  alt="OpenSearch ML Dashboard showing 249K scored alerts, 173 high threats, score distribution, and top signatures"
+  caption="Live ML Dashboard (24h) — 249K+ alerts scored, 173 high threats detected, 0.07% attack rate"
+/>
+
+Key insights from production data:
+
+<div class="not-prose grid grid-cols-2 md:grid-cols-4 gap-3 my-6">
+  <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+    <div class="text-2xl font-bold text-white">249K+</div>
+    <div class="text-xs text-neutral-500">Alerts Scored</div>
+  </div>
+  <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+    <div class="text-2xl font-bold text-red-400">173</div>
+    <div class="text-xs text-neutral-500">High Threats (≥90%)</div>
+  </div>
+  <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+    <div class="text-2xl font-bold text-emerald-400">99.93%</div>
+    <div class="text-xs text-neutral-500">Benign Traffic</div>
+  </div>
+  <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-center">
+    <div class="text-2xl font-bold text-amber-400">0.07%</div>
+    <div class="text-xs text-neutral-500">Attack Rate</div>
+  </div>
+</div>
+
+The score distribution shows exactly what you'd expect: most traffic scores very low (benign), with a small tail of suspicious activity. The "Top Signatures by Score" panel reveals that `HOMELAB Command Injection` and `ET DOS Possible SSDP Amplification` consistently trigger high ML scores—validating that the model learned to recognize actual attack patterns.
+
+---
+
+## Built on HomeLab SOC v2
+
+This ML pipeline runs on top of my [HomeLab SOC v2](/projects/homelab-soc/) infrastructure. The SIEM provides the data, the purple team exercises provide the labels, and the automation framework handles response.
+
+<div class="not-prose mt-6 p-4 rounded-lg bg-white/5 border border-white/10">
+  <p class="text-sm text-neutral-400"><strong class="text-neutral-300">🔗 Foundation:</strong> <a href="/projects/homelab-soc/" class="text-cyan-400 hover:text-cyan-300 underline">HomeLab SOC v2</a> — The production security infrastructure that generates the data for this ML pipeline.</p>
+</div>
+
+---
+
+## What's Next
+
+<div class="not-prose my-8 space-y-3">
+  <div class="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/10">
+    <span class="text-neutral-500">◻</span>
+    <span class="text-neutral-300"><strong>Ensemble approach</strong> — Combine Isolation Forest, Random Forest, and XGBoost with a meta-learner</span>
+  </div>
+  <div class="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/10">
+    <span class="text-neutral-500">◻</span>
+    <span class="text-neutral-300"><strong>Online learning</strong> — Continuous model updates from analyst feedback</span>
+  </div>
+  <div class="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/10">
+    <span class="text-neutral-500">◻</span>
+    <span class="text-neutral-300"><strong>Real-time scoring service</strong> — FastAPI microservice with sub-second latency</span>
+  </div>
+  <div class="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/10">
+    <span class="text-neutral-500">◻</span>
+    <span class="text-neutral-300"><strong>Zeek integration</strong> — Flow-level features for richer behavioral signals</span>
+  </div>
+</div>
