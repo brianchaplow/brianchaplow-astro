@@ -65,7 +65,7 @@ $CONFIG = [
     'encryption_key' => getenv('HONEYPOT_ENCRYPTION_KEY') ?: null,
     
     // Rate limiting (works with Cloudflare)
-    'max_attempts_per_session' => 50,
+    'max_attempts_per_session' => 5000,
     'session_timeout' => 3600,
     
     // Logging verbosity
