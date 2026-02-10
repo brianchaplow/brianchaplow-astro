@@ -549,6 +549,7 @@ if (!$rate_limit['allowed']) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
     <title>Log In &lsaquo; <?php echo htmlspecialchars($site); ?> &#8212; WordPress</title>
     <link rel="icon" href="https://s.w.org/favicon.ico" sizes="32x32">
     <style>
